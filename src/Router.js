@@ -83,18 +83,18 @@ const Routercomponent = () => {
 
           <Scene key="SignIn" component={SignIn} hideNavBar />
           <Scene key="SignUp" component={SignUp} hideNavBar />
-          <Scene key="Reg" component={Register} hideNavBar   />
-          <Scene key="BuyChips" component={BuyChips} hideNavBar  />
+          <Scene key="Reg" component={Register} hideNavBar />
+          <Scene key="BuyChips" component={BuyChips} hideNavBar />
           <Scene key="Scan" component={ScanChips} hideNavBar />
-          <Scene key="Rests" component={Resturants} hideNavBar  />
-          <Scene key="Menu" component={Menu} hideNavBar  />
-          <Scene key="Details" component={FoodDetails} hideNavBar   />
-          <Scene key="Payment" component={Payment} hideNavBar  />
+          <Scene key="Rests" component={Resturants} hideNavBar />
+          <Scene key="Menu" component={Menu} hideNavBar />
+          <Scene key="Details" component={FoodDetails} hideNavBar />
+          <Scene key="Payment" component={Payment} hideNavBar />
 
 
 
 
-          <Scene key="Resssts" component={AnimationRest} hideNavBar initial />
+          <Scene key="Resssts" component={AnimationRest} hideNavBar />
 
 
 

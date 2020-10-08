@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import {  View, Text, ImageBackground, TouchableWithoutFeedback } from 'react-native'
-import { Button, Container, Content, Input, Row, Picker,  Icon } from 'native-base';
+import { View, Text, ImageBackground, TouchableWithoutFeedback } from 'react-native'
+import { Button, Container, Content, Input, Row, Picker, Icon } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
 import { Actions } from 'react-native-router-flux';
 
 class SignUp extends Component {
     state = {
-      
+
         selected2: undefined
     }
 
@@ -54,7 +54,7 @@ class SignUp extends Component {
                             <Picker
 
                                 mode="dropdown"
-                                iosIcon={<Icon name="arrow-down" />}
+                                iosIcon={<Icon name="arrow-down" type='Feather' />}
                                 style={{ width: undefined }}
                                 placeholderStyle={{ color: "#bfc6ea" }}
                                 selectedValue={this.state.selected2}
@@ -86,8 +86,8 @@ class SignUp extends Component {
 
 
 
-                        <Button onPress={()=> Actions.MainFlow()} 
-                         style={{ ...styles.mainDarkButton, marginTop: hp(6) }}>
+                        <Button onPress={() => Actions.MainFlow()}
+                            style={{ ...styles.mainDarkButton, marginTop: hp(6) }}>
                             <Text style={styles.midWhiteTextForMainButton}>Sign up</Text>
                         </Button>
 

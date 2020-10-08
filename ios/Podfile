@@ -22,12 +22,3 @@ target 'nock' do
     flipper_post_install(installer)
   end
 end
-
-target 'nock-tvOS' do
-  # Pods for nock-tvOS
-
-  target 'nock-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-end
