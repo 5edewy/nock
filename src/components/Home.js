@@ -2,13 +2,17 @@ import React, { Component } from 'react';
 import {
     View, Text, Image, TouchableWithoutFeedback, Animated, Alert, Easing, FlatList, Modal, TextInput, Platform, Linking
 } from 'react-native'
-import { Button, Card, Container, Content, Row } from 'native-base';
+import { Button, Card, Container, Content, Input, Row } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
 import { Actions } from 'react-native-router-flux';
-import NfcManager, { NfcTech, NfcEvents } from 'react-native-nfc-manager';
-import { joinArrayObjs, convertArrayObjs } from '../Config';
-
+import NfcManager, { NfcTech } from 'react-native-nfc-manager';
+import { joinArrayObjs, convertArrayObjs, buildUrlPayload, byteToString } from '../Config';
+import { userApi, otherApi, changeValue } from '../actions';
+import { Spinner } from './Assets/common';
+import { connect } from 'react-redux';
+import { L } from '../Config';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const linkData = [
     { name: 'Snap chat', key: 'snap', image: require('./Assets/images/Snapchat.png') },
@@ -36,6 +40,7 @@ const linkData = [
 class Home extends Component {
 
     state = {
+        scanButton: new Animated.Value(wp(100)),
         openSideMenu: new Animated.Value(wp(-100)),
         addLinkModal: false,
         selectedLink: null,
@@ -48,12 +53,14 @@ class Home extends Component {
         nockedTag: false,
         nockedSocail: []
     }
-    checkSocialObject(item) {
-        item.media_name == ""
-    }
     componentDidMount() {
-
+        const { user, userApi } = this.props
+        userApi('GET', 'getSocialMedia/' + user.username, '', user.access, 'socail')
         NfcManager.start();
+
+        Animated.timing(this.state.scanButton, {
+            toValue: wp(88), duration: 1000, easing: Easing.ease, useNativeDriver: true
+        }).start()
     }
     componentWillUnMount() {
         this.cleanUp();
@@ -66,71 +73,28 @@ class Home extends Component {
             text
         })
     }
-    saveSocial() {
-        let { text, social, key } = this.state
-        this.removeSocail(key)
+    saveSocial2() {
+        let { text, key } = this.state
+        let { minSocial, changeValue } = this.props
+        this.removeSocail(key, true)
         if (text) {
-            console.log(typeof (text), typeof (text) == "number");
+            // console.log(typeof (text), typeof (text) == "number");
             if (typeof (text) == 'number') {
                 text = text.toString()
             }
-            console.log(typeof (text) == 'number');
+            // console.log(typeof (text) == 'number');
             const data = { media_name: key, account: text }
-            social.push(data)
-            this.setState({ modalPage: 1, text: '', selectedLink: null, key: '', social })
+            minSocial.push(data)
+            changeValue({ minSocial })
+            this.setState({ modalPage: 1, text: '', selectedLink: null, key: '' })
+
         } else {
             this.setState({ modalPage: 1, text: '', selectedLink: null, key: '' })
         }
 
     }
 
-    writeData = async () => {
 
-        let { social } = this.state
-
-        if (social.length <= 0) {
-            Alert.alert("Enter some data");
-            return;
-        }
-        try {
-            let tech = Platform.OS === 'ios' ? NfcTech.MifareIOS : NfcTech.NfcA;
-            let resp = await NfcManager.requestTechnology(tech, {
-                alertMessage: "Ready for magic"
-            });
-            let cmd = Platform.OS === 'ios' ? NfcManager.sendMifareCommandIOS : NfcManager.transceive;
-            let data = JSON.stringify(joinArrayObjs(social));
-            console.log(data, data.length, social);
-            let fullLength = data.length + 7;
-            let payloadLength = data.length + 3;
-            resp = await cmd([0xA2, 0x04, 0x03, fullLength, 0xD1, 0x01]);
-            resp = await cmd([0xA2, 0x05, payloadLength, 0x54, 0x02, 0x65]) // T enYourPayload
-            let currentPage = 6;
-            let currentPayload = [0xA2, currentPage, 0x6E]; // n
-            for (let i = 0; i < data.length; i++) {
-                currentPayload.push(data.charCodeAt(i));
-                if (currentPayload.length == 6) {
-                    resp = await cmd(currentPayload);
-                    currentPage += 1;
-                    currentPayload = [0xA2, currentPage]
-                }
-            }
-            currentPayload.push(254);
-            while (currentPayload.length < 6) {
-                currentPayload.push(0);
-            }
-            resp = await cmd(currentPayload);
-
-            const log = resp.toString() === "10" ? "Success" : resp.toString()
-            this.setState({ addLinkModal: false })
-            console.log('succ', log);
-            this.cleanUp();
-        } catch (error) {
-            console.log('err', error.toString());
-            this.cleanUp();
-        }
-
-
-    }
     readData = async () => {
         try {
             let tech = Platform.OS === 'ios' ? NfcTech.MifareIOS : NfcTech.NfcA;
@@ -158,8 +122,10 @@ class Home extends Component {
                 text = text + String.fromCharCode(parseInt(bytes[i]));
             }
             if (text) {
-                console.log(convertArrayObjs(text));
-                //   this.setState({ nockedSocail: convertArrayObjs(JSON.parse(text)), nockedTag: true })
+                console.log(text);
+                this.getNockedTag(text)
+                // console.log(convertArrayObjs(text));
+                // this.setState({ nockedSocail: convertArrayObjs(text), nockedTag: true })
             }
 
             // console.log(convertArrayObjs(JSON.parse(text)));
@@ -172,7 +138,17 @@ class Home extends Component {
 
 
     }
-
+    getNockedTag(username) {
+        const { user, userApi } = this.props
+        userApi('GET', 'getSocialMedia/' + username, '', user.access, 'nockedSocail')
+    }
+    componentDidUpdate() {
+        const { nockedSocail, updateNocked, changeValue } = this.props
+        if (nockedSocail && updateNocked) {
+            changeValue({ updateNocked: false })
+            this.setState({ nockedTag: true })
+        }
+    }
     _sidemenuOn() {
         Animated.timing(this.state.openSideMenu, {
             toValue: 1, duration: 500, useNativeDriver: true, easing: Easing.ease
@@ -200,15 +176,18 @@ class Home extends Component {
             </TouchableWithoutFeedback>
         )
     }
-    removeSocail(key) {
-        let { social } = this.state
-        for (let i = 0; i < social.length; i++) {
-            const element = social[i];
+    removeSocail(key, update) {
+        let { minSocial, changeValue } = this.props
+        for (let i = 0; i < minSocial.length; i++) {
+            const element = minSocial[i];
             if (key == element.media_name) {
-                social.splice(i, 1)
+                minSocial.splice(i, 1)
             }
         }
-        this.setState({ social })
+        changeValue({ minSocial })
+        if (!update) {
+            this.setState({ modalPage: 1, text: '', selectedLink: null, key: '' })
+        }
     }
     handelOpenUrl(url, type) {
         if (type == 'mail') {
@@ -238,16 +217,38 @@ class Home extends Component {
         return object
     }
     filterSocail(item) {
-        const { social } = this.state
+        const { minSocial } = this.props
         let object
-        object = social.filter((it) => it.media_name == item)[0]
+        object = minSocial.filter((it) => it.media_name == item)[0]
         // console.clear();
         // console.log(object);
         return object
     }
+    _renderLoading() {
+        const { loading, loadingOthers } = this.props
+        if (loading || loadingOthers) {
+            return <Spinner size='large' />;
+        }
+    }
+    saveSocial() {
+        const { userApi, minSocial, user } = this.props
+        userApi('POST', 'addSocialMedia', { social: minSocial }, user.access, 'socail')
+        this.setState({ modalPage: 1, text: '', selectedLink: null, key: '', addLinkModal: false })
+    }
+    async outLog() {
+        // console.log('sdds');
+        try {
+            await AsyncStorage.removeItem('user');
+            // this.props.clearUser()
+            Actions.reset('auth');
+        } catch (e) {
+            console.log(e);
+        }
+    }
     render() {
-        const { social, key, text, nockedTag, nockedSocail } = this.state
-        key
+        const { key, text, nockedTag } = this.state
+        const { user, minSocial, nockedSocail, nockedSocailUser } = this.props
+        // console.log(user);
         return (
             <Container>
 
@@ -263,13 +264,15 @@ class Home extends Component {
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                         <Image style={styles.personalImage}
-                            source={require('./Assets/images/man.png')} />
+                            source={
+                                user && user.photo ? { uri: user.photo } : require('./Assets/images/man.png')
+                            } />
                         <View style={{ marginHorizontal: wp(2) }}>
-                            <Text style={styles.regWhiteText} >Adel Mehanna</Text>
+                            <Text style={styles.regWhiteText} >{user && user.name}</Text>
                             <Text style={styles.regWhiteText}>43 pops</Text>
                         </View>
                     </View>
-                    <TouchableWithoutFeedback onPress={this.readData}>
+                    <TouchableWithoutFeedback onPress={() => Actions.push('Scan', { user })}>
                         <View>
                             <Image style={styles.SideMenuIcon}
                                 source={require('./Assets/images/scan.png')} />
@@ -285,7 +288,7 @@ class Home extends Component {
                         <Text style={styles.boldDarkText} >My Social Links</Text>
 
                         <View style={styles.viewForSocialImage}>
-                            {social.map((item, index) => {
+                            {minSocial.map((item, index) => {
                                 const social = this.filterObject(item.media_name, 'socail')
                                 if (social) {
                                     return (
@@ -313,7 +316,7 @@ class Home extends Component {
                         <View style={{ marginTop: hp(5) }}>
                             <Text style={styles.boldDarkText} >Text me</Text>
                             <View style={styles.viewForSocialImage}>
-                                {social.map((item, index) => {
+                                {minSocial.map((item, index) => {
                                     const social = this.filterObject(item.media_name, 'textme')
                                     if (social) {
                                         return (
@@ -334,7 +337,7 @@ class Home extends Component {
                         <View style={{ marginTop: hp(5) }}>
                             <Text style={styles.boldDarkText} >My Contacts</Text>
                             <View style={styles.viewForSocialImage}>
-                                {social.map((item, index) => {
+                                {minSocial.map((item, index) => {
                                     const social = this.filterObject(item.media_name, 'contact')
                                     if (social) {
                                         return (
@@ -422,17 +425,32 @@ class Home extends Component {
                             </View>
 
                             <View style={{ ...styles.lineGray, marginTop: hp(8) }} />
-                            <View style={{ ...styles.lineForImageandName, alignSelf: 'center', marginTop: hp(1) }}>
-                                <Image style={styles.pageIcon}
-                                    source={require('./Assets/images/out.png')} />
-                                <Text style={styles.regDarlText}>Logout</Text>
-                            </View>
+                            <TouchableWithoutFeedback onPress={() => this.outLog()}>
+                                <View style={{ ...styles.lineForImageandName, alignSelf: 'center', marginTop: hp(1) }}>
+                                    <Image style={styles.pageIcon}
+                                        source={require('./Assets/images/out.png')} />
+                                    <Text style={styles.regDarlText}>Logout</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+
                         </View>
                     </Card>
                     <TouchableWithoutFeedback
                         onPress={() => this._sidemenuOff()}>
                         <View style={{ width: wp(30), height: hp(100), }} />
 
+
+                    </TouchableWithoutFeedback>
+                </Animated.View>
+
+                <Animated.View style={{ position: 'absolute', top: hp(25), justifyContent: 'center', alignItems: 'center', backgroundColor: '#000', transform: [{ translateX: this.state.scanButton }] }} >
+                    <TouchableWithoutFeedback onPress={this.readData}>
+
+
+                        <View style={{ width: wp(11), height: wp(11), alignSelf: 'center', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderRadius: wp(2) }}>
+                            <Image style={styles.SideMenuIcon}
+                                source={require('./Assets/images/scan.png')} />
+                        </View>
 
                     </TouchableWithoutFeedback>
                 </Animated.View>
@@ -464,7 +482,7 @@ class Home extends Component {
                                     <View style={styles.modalViewIII}>
                                         <Image style={styles.imageiconSelect}
                                             source={this.state.selectedLinkImage} />
-                                        <TextInput
+                                        <Input
                                             style={{
                                                 width: wp(70), marginLeft: wp(1), ...styles.lightDarkText
                                             }}
@@ -494,7 +512,7 @@ class Home extends Component {
                                             </TouchableWithoutFeedback>
                                         </View>
                                         : null}
-                                    <Button style={{ ...styles.mainDarkButton, marginTop: hp(15), marginBottom: hp(3) }} onPress={() => this.saveSocial()}>
+                                    <Button style={{ ...styles.mainDarkButton, marginTop: hp(15), marginBottom: hp(3) }} onPress={() => this.saveSocial2()}>
                                         <Text style={styles.midWhiteTextForMainButton}>Save Link</Text>
                                     </Button>
 
@@ -516,7 +534,7 @@ class Home extends Component {
                                         renderItem={this._renderSocialMedia}
                                         keyExtractor={(item, index) => index.toString()}
                                     />
-                                    <Button style={{ ...styles.mainDarkButton, marginTop: hp(15), marginBottom: hp(3) }} onPress={this.writeData}>
+                                    <Button style={{ ...styles.mainDarkButton, marginTop: hp(15), marginBottom: hp(3) }} onPress={() => this.saveSocial()}>
                                         <Text style={styles.midWhiteTextForMainButton}>Save Link</Text>
                                     </Button>
                                 </View> : null}
@@ -610,10 +628,16 @@ class Home extends Component {
 
                     </View>
                 </Modal>
-
+                {this._renderLoading()}
             </Container>
         );
     }
 }
+const mapStateToProps = ({ auth }) => {
+    const { user, loading, minSocial, updateNocked, nockedSocailUser, nockedSocail } = auth
 
-export default Home;
+    return { user, loading, minSocial, updateNocked, nockedSocailUser, nockedSocail };
+};
+
+export default connect(mapStateToProps, { userApi, otherApi, changeValue })(Home);
+

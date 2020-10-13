@@ -13,6 +13,7 @@ import Menu from './components/Menu';
 import FoodDetails from './components/FoodDetails';
 import Payment from './components/Payment';
 import AnimationRest from './components/AnimationRest';
+import Intro from './components/Intro';
 
 
 
@@ -54,36 +55,34 @@ const Routercomponent = () => {
 
   return (
     <Router>
-      <Stack key="root"       >
-
-
+      <Stack key="root" >
+        <Stack key='intro' component={Intro} hideNavBar />
+        <Stack key='auth' hideNavBar>
+          <Scene key="Reg" component={Register} hideNavBar />
+          <Scene key="SignUp" component={SignUp} hideNavBar />
+          <Scene key="SignIn" component={SignIn} hideNavBar />
+        </Stack>
 
 
 
         <Stack key="MainStack" hideNavBar >
-
-
           <Tabs key="MainFlow" showLabel={false}
             tabBarStyle={styles.tabBarStyles}
             hideNavBar
           >
-
             <Scene key="Home" component={Home} hideNavBar icon={TabIcon}
               iconName={require('./components/Assets/images/homei.png')}
-              tabText="Home" initial />
-
-            <Scene key="People" component={SignUp} hideNavBar icon={TabIcon}
+              tabText="Home" />
+            {/* <Scene key="People" component={SignUp} hideNavBar icon={TabIcon}
               iconName={require('./components/Assets/images/pep.png')}
-              tabText="People" />
+              tabText="People" initial /> */}
 
           </Tabs>
 
 
 
 
-          <Scene key="SignIn" component={SignIn} hideNavBar />
-          <Scene key="SignUp" component={SignUp} hideNavBar />
-          <Scene key="Reg" component={Register} hideNavBar />
+
           <Scene key="BuyChips" component={BuyChips} hideNavBar />
           <Scene key="Scan" component={ScanChips} hideNavBar />
           <Scene key="Rests" component={Resturants} hideNavBar />

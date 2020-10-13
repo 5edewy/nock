@@ -4,12 +4,13 @@ import { Button, Container, Content, } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
 import { Actions } from 'react-native-router-flux';
+import { L } from '../Config';
 
 class Register extends Component {
     state = {
         circScale: new Animated.Value(0),
         nockRotate: new Animated.Value(0),
-      
+
     }
 
     componentDidMount() {
@@ -25,7 +26,7 @@ class Register extends Component {
 
 
     }
-   
+
 
     render() {
         return (
@@ -43,7 +44,7 @@ class Register extends Component {
 
 
                             <View style={styles.regViewII}>
-                                <Text style={{ ...styles.medDarkText, fontSize: wp(7) }}>Welcome</Text>
+                                <Text style={{ ...styles.medDarkText, fontSize: wp(7) }}>{L('Welcome')}</Text>
                                 <Animated.Image style={{
                                     ...styles.nockDarkImage,
                                     transform: [{
@@ -56,17 +57,17 @@ class Register extends Component {
                                     source={require('./Assets/images/nock.png')} />
                             </View>
 
-                            <Button onPress={() => Actions.SignUp()}
+                            <Button onPress={() => Actions.push('SignUp')}
                                 style={{ ...styles.mainDarkButton, marginTop: hp(6) }}>
-                                <Text style={styles.midWhiteTextForMainButton}>Sign up</Text>
+                                <Text style={styles.midWhiteTextForMainButton}>{L('SignUp')}</Text>
                             </Button>
 
-                            <Button onPress={() => Actions.SignIn()}
+                            <Button onPress={() => Actions.push('SignIn')}
                                 style={{
                                     ...styles.mainDarkButton, marginTop: hp(2),
                                     backgroundColor: '#fff'
                                 }}>
-                                <Text style={{ ...styles.midWhiteTextForMainButton, color: '#1e1e1d' }}>Sign in</Text>
+                                <Text style={{ ...styles.midWhiteTextForMainButton, color: '#1e1e1d' }}>{L('Signin')}</Text>
                             </Button>
 
                         </View>

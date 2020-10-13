@@ -1,20 +1,48 @@
-import React, { Component } from 'react'
-import SplashScreen from 'react-native-splash-screen'
-import { View, Text } from 'react-native';
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
-import Router from './Router'
+import React, { Component } from 'react';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import reducers from './reducers';
+import ReduxThunk from 'redux-thunk';
+import SplashScreen from 'react-native-splash-screen';
+import AsyncStorage from '@react-native-community/async-storage';
+import { changeLng } from './Config'
+import Router from './Router';
+import { Actions } from 'react-native-router-flux';
+import { Root, Header } from 'native-base';
+
 
 class App extends Component {
-
-    componentDidMount() {
-        // do stuff while splash screen is shown
-        // After having done stuff (such as async tasks) hide the splash screen
+    state = { lang: false }
+    async componentDidMount() {
+        this.checkLang()
         SplashScreen.hide();
+    }
+    async checkLang() {
+        try {
+            let lang = await AsyncStorage.getItem('language');
+            if (lang) {
+                changeLng(lang)
+                this.setState({ lang: true })
+                Actions.reset('intro')
+            } else {
+                changeLng('en', 1)
+            }
+        } catch (error) {
+            // console.log(error);
+        }
     }
 
     render() {
-        return <Router />
+        const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
+        return (
+            <Root>
+                <Provider store={store}>
+                    {(this.state.lang) ? (
+                        <Router />
+                    ) : null}
+                </Provider>
+            </Root>
+        );
 
     }
 }

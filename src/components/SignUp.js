@@ -1,24 +1,62 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, ImageBackground, Alert } from 'react-native'
 import { Button, Container, Content, Input, Row, Picker, Icon } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
 import { Actions } from 'react-native-router-flux';
+import { userApi, otherApi } from '../actions';
+import { Spinner } from './Assets/common';
+import { connect } from 'react-redux';
+import { L } from '../Config';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 class SignUp extends Component {
     state = {
-
-        selected2: undefined
+        name: '', email: '', username: '', phone: '', country: '',
+        postal_code: '', password: '', passwordConfirm: '', city: ''
     }
 
-    onValueChange2(value) {
-        this.setState({
-            selected2: value
-        });
+    componentDidMount() {
+        this.props.otherApi('GET', 'getCountries', '', '', 'country')
     }
+    getCity(id) {
+        this.props.otherApi('GET', 'getCities/' + id, '', '', 'city')
+    }
+    onButtonChange() {
 
+        const {
+            name, email, username, phone, country, postal_code, password, passwordConfirm, city
+        } = this.state;
+        const data = {
+            name, email, username, phone, country, postal_code, password, city
+        }
+
+        for (const [key, value] of Object.entries(data)) {
+            if (!value) {
+                Alert.alert(L('emptyField') + L(key))
+
+                return
+            } else if (key == "password" && value != passwordConfirm) {
+                Alert.alert(L('passwordNotConfirmed'))
+                return
+            }
+        }
+
+        this.props.userApi('POST', 'register', data, '', 'register')
+
+
+    }
+    _renderLoading() {
+        const { loading, loadingOthers } = this.props
+        if (loading || loadingOthers) {
+            return <Spinner size='large' />;
+        }
+    }
     render() {
-        const { rememberMe } = this.state
+        const { name, email, username, phone, country, city, postal_code,
+            password, passwordConfirm } = this.state
+        const { countries, cities } = this.props
+        // console.log(countries && countries[0]);
         return (
             <Container>
                 <ImageBackground style={{ width: wp(100), height: hp(40) }}
@@ -30,21 +68,57 @@ class SignUp extends Component {
                 }} />
                 <Content >
                     <View style={{ ...styles.View90, marginTop: hp(2), marginBottom: hp(2) }}>
-                        <Text style={styles.semiBoldDarkText}>Sign Up</Text>
-                        <Text style={styles.regDarlText}>Filling the bellow info</Text>
+                        <Text style={styles.semiBoldDarkText}>{L('SignUp')}</Text>
+                        <Text style={styles.regDarlText}>{L('Fillingthebellowinfo')}</Text>
 
 
 
                         <View style={styles.InputoutView}>
                             <Input
-                                placeholder="Phone number..."
+                                placeholder={L('username')}
                                 placeholderTextColor="#a2a2a2"
+                                onChangeText={(username) => this.setState({ username })}
+                                value={username}
+                                keyboardType='default'
                                 style={styles.inputStyle} />
+
+                        </View>
+                        <View style={styles.InputoutView}>
+                            <Input
+                                placeholder={L('name')}
+                                placeholderTextColor="#a2a2a2"
+                                onChangeText={(name) => this.setState({ name })}
+                                value={name}
+                                keyboardType='default'
+                                style={styles.inputStyle} />
+
+                        </View>
+                        <View style={styles.InputoutView}>
+                            <Input
+                                placeholder={L('phone')}
+                                placeholderTextColor="#a2a2a2"
+                                onChangeText={(phone) => this.setState({ phone })}
+                                value={phone}
+                                keyboardType='phone-pad'
+                                style={styles.inputStyle} />
+
                         </View>
 
                         <View style={styles.InputoutView}>
                             <Input
-                                placeholder="Email..."
+                                onChangeText={(email) => this.setState({ email })}
+                                value={email}
+                                keyboardType='email-address'
+                                placeholder={L('email')}
+                                placeholderTextColor="#a2a2a2"
+                                style={styles.inputStyle} />
+                        </View>
+                        <View style={styles.InputoutView}>
+                            <Input
+                                onChangeText={(postal_code) => this.setState({ postal_code })}
+                                value={postal_code}
+                                keyboardType='number-pad'
+                                placeholder={L('postal_code')}
                                 placeholderTextColor="#a2a2a2"
                                 style={styles.inputStyle} />
                         </View>
@@ -52,57 +126,96 @@ class SignUp extends Component {
 
                         <View style={styles.inputWithLabelForget}>
                             <Picker
-
+                                placeholder={L('country')}
                                 mode="dropdown"
                                 iosIcon={<Icon name="arrow-down" type='Feather' />}
-                                style={{ width: undefined }}
+                                style={{ width: wp(90), alignSelf: 'center' }}
                                 placeholderStyle={{ color: "#bfc6ea" }}
-                                selectedValue={this.state.selected2}
-                                onValueChange={this.onValueChange2.bind(this)}
+                                selectedValue={country}
+                                iosHeader={L('selectCountry')}
+                                onValueChange={(country) => {
+                                    this.getCity(country)
+                                    this.setState({ country })
+                                }}
                             >
-                                <Picker.Item label="KSA" value="key0" />
-                                <Picker.Item label="Egy" value="key1" />
-                                <Picker.Item label="USA" value="key2" />
-                                <Picker.Item label="TUR" value="key3" />
+                                {countries.map((item, index) => {
+                                    return (
+                                        <Picker.Item label={item.name} value={item.id} key={index} />
+
+                                    )
+                                })}
+
+                            </Picker>
+                        </View>
+                        <View style={styles.inputWithLabelForget}>
+                            <Picker
+                                placeholder={L('city')}
+                                mode="dropdown"
+                                iosIcon={<Icon name="arrow-down" type='Feather' />}
+                                style={{ width: wp(90), alignSelf: 'center' }}
+                                placeholderStyle={{ color: "#bfc6ea" }}
+                                selectedValue={city}
+                                iosHeader={L('selectCity')}
+                                onValueChange={(city) => this.setState({ city })}
+                            >
+                                {cities.map((item, index) => {
+                                    return (
+                                        <Picker.Item label={item.name} value={item.id} key={index} />
+
+                                    )
+                                })}
 
                             </Picker>
                         </View>
 
                         <View style={styles.InputoutView}>
                             <Input
-                                placeholder="Password..."
+                                onChangeText={(password) => this.setState({ password })}
+                                value={password}
+                                secureTextEntry
+                                placeholder={L('password')}
                                 placeholderTextColor="#a2a2a2"
                                 style={styles.inputStyle} />
                         </View>
 
                         <View style={styles.InputoutView}>
                             <Input
-                                placeholder="Repeat Password..."
+                                onChangeText={(passwordConfirm) => this.setState({ passwordConfirm })}
+                                value={passwordConfirm}
+                                secureTextEntry
+                                placeholder={L('passwordConfirm')}
                                 placeholderTextColor="#a2a2a2"
                                 style={styles.inputStyle} />
                         </View>
 
 
 
-
-
-                        <Button onPress={() => Actions.MainFlow()}
+                        <Button onPress={() => this.onButtonChange()}
                             style={{ ...styles.mainDarkButton, marginTop: hp(6) }}>
-                            <Text style={styles.midWhiteTextForMainButton}>Sign up</Text>
+                            <Text style={styles.midWhiteTextForMainButton}>{L('SignUp')}</Text>
                         </Button>
 
 
                         <Row style={{ alignSelf: 'center', alignItems: 'center', marginTop: hp(2.5) }}>
-                            <Text style={{ ...styles.regDarlText, fontSize: wp(3.2), marginHorizontal: wp(1) }}>Alread have an account?</Text>
-                            <Text style={{ ...styles.medDarkText, fontSize: wp(3.4), marginHorizontal: wp(1) }}>Sign in</Text>
+                            <Text style={{ ...styles.regDarlText, fontSize: wp(3.2), marginHorizontal: wp(1) }}>{L('Alreadhaveanaccount')}</Text>
+                            <TouchableWithoutFeedback onPress={() => Actions.push('SignIn')}>
+                                <Text style={{ ...styles.medDarkText, fontSize: wp(3.4), marginHorizontal: wp(1) }}>{L('Signin')}</Text>
+
+                            </TouchableWithoutFeedback>
                         </Row>
                     </View>
-
-
                 </Content>
+                {this._renderLoading()}
             </Container>
         );
     }
 }
+const mapStateToProps = ({ auth, others }) => {
+    const { user, loading } = auth
+    const { countries, cities } = others
 
-export default SignUp;
+    const loadingOthers = others.loading
+    return { user, loading, countries, cities, loadingOthers };
+};
+
+export default connect(mapStateToProps, { userApi, otherApi })(SignUp);
