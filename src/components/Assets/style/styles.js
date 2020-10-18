@@ -15,6 +15,12 @@ const DarkPri = '#1e1e1d'
 
 const styles = StyleSheet.create({
     //General Styles 
+    row_aliCentre: {
+        flexDirection: 'row', alignItems: 'center'
+    },
+    row_aliCentre_jusCentre: {
+        flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'
+    },
     semiBoldDarkText: {
         fontFamily: Semi, fontSize: wp(4), color: DarkPri
     },
@@ -48,13 +54,16 @@ const styles = StyleSheet.create({
         fontFamily: Light, fontSize: wp(3.2), height: hp(7)
     },
     mainDarkButton: {
-        width: wp(90), backgroundColor: DarkPri, height: hp(7.9), borderRadius: wp(6),
+        width: wp(90), backgroundColor: DarkPri, height: hp(7.5), borderRadius: wp(6),
         justifyContent: 'center', alignItems: 'center', alignSelf: 'center'
     },
     rowAlignsentre: {
         flexDirection: 'row', alignItems: 'center'
     },
-
+    header: {
+        flexDirection: 'row', alignItems: 'center', marginTop: hp(4),
+        paddingHorizontal: wp(3), marginTop: hp(6)
+    },
     // SignIn & Sign Up
     inputWithLabelForget: {
         height: hp(8), borderRadius: wp(2),
@@ -249,6 +258,90 @@ const styles = StyleSheet.create({
     },
     successPayImage: {
         width: wp(20), height: hp(13), resizeMode: 'contain'
+    },
+    //MyProfile
+    headerForProfile: {
+        backgroundColor: '#000', height: hp(22), borderBottomLeftRadius: wp(14), borderBottomRightRadius: wp(14)
+    },
+    secheaderProfile: {
+        flexDirection: 'row', alignItems: 'center', marginTop: hp(4),
+        paddingHorizontal: wp(3), marginTop: hp(6)
+    },
+    absViewHeader: {
+        flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: wp(6),
+        position: 'absolute', bottom: hp(-5.5), width: wp(100)
+    },
+    whiteViewImgProfile: {
+        width: wp(27), height: wp(27), borderRadius: wp(27 / 2), backgroundColor: '#fff', alignItems: 'center',
+        justifyContent: 'center'
+    },
+    profileIMG: {
+        width: wp(24), height: wp(24), borderRadius: wp(24 / 2), resizeMode: 'cover',
+    },
+    whiteViewforcheck: {
+        width: wp(12.5), height: wp(12.5), borderRadius: wp(12.5 / 2), backgroundColor: '#fff', alignItems: 'center',
+        justifyContent: 'center'
+    },
+    blackinnerView: {
+        width: wp(11), height: wp(11), borderRadius: wp(11 / 2), backgroundColor: '#000', alignItems: 'center',
+        justifyContent: 'center'
+    },
+    viewForText: {
+        alignSelf: 'center', alignItems: 'center', marginTop: hp(6)
+    },
+    itemForProfile: {
+        flexDirection: 'column', alignItems: 'flex-start', paddingVertical: hp(1), marginTop: hp(1)
+    },
+    passView: {
+        flexDirection: 'row', justifyContent: 'space-between', width: wp(88),
+        marginTop: hp(1), alignItems: 'center'
+    },
+    bgCamView: {
+        backgroundColor: '#110a0a', width: wp(24), height: wp(24),
+        borderRadius: wp(24 / 2), position: 'absolute', zIndex: 1, opacity: .5,
+        justifyContent: 'center', alignItems: 'center'
+    },
+    //my Orders 
+    segmentViewOrders: {
+        width: wp(27), height: hp(5), borderRadius: wp(6),
+        marginHorizontal: wp(1), justifyContent: 'center', alignItems: 'center'
+    },
+    myOrdersCardView: {
+        flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#f2f2f2', paddingVertical: hp(.5),
+        marginTop: hp(1.5), paddingHorizontal: wp(1)
+    },
+    CardView: {
+        paddingVertical: hp(.5),
+        marginTop: hp(1.5), paddingHorizontal: wp(1), borderBottomWidth: 1, borderBottomColor: '#f2f2f2', paddingBottom: hp(2)
+    },
+    innerCardView: {
+        flexDirection: 'row', alignItems: 'center',
+        marginTop: hp(1.5), paddingHorizontal: wp(1)
+    },
+    plusMinusButt: {
+        width: wp(7.5), height: wp(6.5), borderRadius: wp(2), backgroundColor: '#000', alignItems: 'center',
+        justifyContent: 'center'
+    },
+    numView: {
+        width: wp(11), height: wp(6.5), borderRadius: wp(2), borderWidth: .5, justifyContent: 'center', alignItems: 'center'
+    },
+    //Conact us
+
+    textAreastyle: {
+        fontFamily: Light, fontSize: wp(3.2), backgroundColor: '#f8f8f8', borderRadius: wp(2), marginTop: hp(2),
+        paddingTop: hp(2), paddingHorizontal: wp(2)
+    },
+    //MyAdrees 
+    CardAddress: {
+        borderRadius: wp(3), paddingVertical: hp(2.5), paddingHorizontal: wp(8), marginTop: hp(2)
+    },
+    smallcheckbos: {
+        width: wp(7), height: hp(3), borderWidth: 1, borderRadius: wp(2), alignItems: 'center',
+        justifyContent: 'center'
+    },
+    adrrButton: {
+        width: wp(55), backgroundColor: DarkPri, height: hp(6.5), borderRadius: wp(4),
+        justifyContent: 'center', alignItems: 'center', alignSelf: 'center', flexDirection: 'row'
     }
 
 });

@@ -14,6 +14,13 @@ import FoodDetails from './components/FoodDetails';
 import Payment from './components/Payment';
 import AnimationRest from './components/AnimationRest';
 import Intro from './components/Intro';
+import EditMyProfile from './components/EditMyProfile';
+import MyProfile from './components/MyProfile';
+import MyOrders from './components/MyOrders';
+import MyCard from './components/MyCard';
+import ContactUS from './components/ContactUS';
+import MyAddress from './components/MyAddress';
+import AddAddress from './components/AddAddress';
 
 
 
@@ -65,7 +72,7 @@ const Routercomponent = () => {
 
 
 
-        <Stack key="MainStack" hideNavBar >
+        <Stack key="MainStack" hideNavBar initial >
           <Tabs key="MainFlow" showLabel={false}
             tabBarStyle={styles.tabBarStyles}
             hideNavBar
@@ -83,12 +90,25 @@ const Routercomponent = () => {
 
 
 
-          <Scene key="BuyChips" initial component={BuyChips} hideNavBar />
+          <Scene key="BuyChips" component={BuyChips} hideNavBar />
           <Scene key="Scan" component={ScanChips} hideNavBar />
           <Scene key="Rests" component={Resturants} hideNavBar />
           <Scene key="Menu" component={Menu} hideNavBar />
           <Scene key="Details" component={FoodDetails} hideNavBar />
           <Scene key="Payment" component={Payment} hideNavBar />
+
+
+          <Scene key="EditMyProfile" component={EditMyProfile} hideNavBar />
+          <Scene key="Myprofile" component={MyProfile} hideNavBar />
+          <Scene key="MyOrders" component={MyOrders} hideNavBar />
+          <Scene key="Mycard" component={MyCard} hideNavBar />
+          <Scene key="ConactUS" component={ContactUS} hideNavBar />
+          <Scene key="MyAdress" component={MyAddress} hideNavBar initial />
+          <Scene key="AddAddress" component={AddAddress} hideNavBar />
+
+
+
+
 
 
 

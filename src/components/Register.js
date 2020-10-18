@@ -9,7 +9,7 @@ import { L } from '../Config';
 class Register extends Component {
     state = {
         circScale: new Animated.Value(0),
-        nockRotate: new Animated.Value(0),
+        nockRotate: new Animated.Value(.01),
 
     }
 

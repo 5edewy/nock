@@ -39,10 +39,7 @@ class Payment extends Component {
     render() {
         return (
             <Container>
-                <View style={{
-                    flexDirection: 'row', alignItems: 'center', marginTop: hp(4),
-                    paddingHorizontal: wp(3),
-                }}>
+                <View style={styles.header}>
                     <View style={{ width: wp(35) }}>
                         <Icon name="left" type="AntDesign" />
                     </View>

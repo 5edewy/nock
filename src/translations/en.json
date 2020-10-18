@@ -1,12 +1,12 @@
 {
     "lang": "en",
     "name": "Name",
-    "email": "email",
-    "username": "User Name",
+    "email": "Email...",
+    "username": "User Name...",
     "phone": "Phone",
     "country": "Country",
     "postal_code": "Postal Code",
-    "password": "Password",
+    "password": "Password...",
     "passwordConfirm": "Confirm Password",
     "city": "City",
     "emptyField": "Pleas enter ",
@@ -22,5 +22,6 @@
     "Welcome": "Welcome",
     "connectionError": "Connection Error",
     "Buy Chips": "Buy Chips",
-    "Choose you favourite chip to Buy": "Choose you favourite chip to Buy"
+    "Choose you favourite chip to Buy": "Choose you favourite chip to Buy",
+    "phonenumber": "Phone number..."
 }
