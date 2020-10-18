@@ -396,11 +396,11 @@ class Home extends Component {
                                 <Text style={styles.regDarlText}>Home</Text>
                             </View>
 
-                            <View style={styles.lineForImageandName}>
+                            {/* <View style={styles.lineForImageandName}>
                                 <Image style={styles.pageIcon}
                                     source={require('./Assets/images/mypay.png')} />
                                 <Text style={styles.regDarlText}>My Payment</Text>
-                            </View>
+                            </View> */}
 
                             <View style={styles.lineForImageandName}>
                                 <Image style={styles.pageIcon}
@@ -409,13 +409,13 @@ class Home extends Component {
                             </View>
 
 
-                            <TouchableWithoutFeedback onPress={() => { this._sidemenuOff(), Actions.Rests() }}>
+                            {/* <TouchableWithoutFeedback onPress={() => { this._sidemenuOff(), Actions.Rests() }}>
                                 <View style={styles.lineForImageandName}>
                                     <Image style={styles.pageIcon}
                                         source={require('./Assets/images/salad.png')} />
                                     <Text style={styles.regDarlText}>Restaurants</Text>
                                 </View>
-                            </TouchableWithoutFeedback>
+                            </TouchableWithoutFeedback> */}
 
 
                             <View style={styles.lineForImageandName}>

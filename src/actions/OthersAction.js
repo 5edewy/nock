@@ -32,25 +32,29 @@ export const otherApi = (method, api, data, sessiontoken, flag) => {
       data: method == "POST" ? data : '',
       params: method == "GET" ? data : ''
     }).then(function (res) {
-      // console.clear();
-      // console.log(res);
+      console.clear();
+      console.log(res);
 
       otherSuccess(dispatch, res.data, flag, sessiontoken);
 
     }).catch(function (error) {
+      let message
       // console.clear();
       // console.log(error);
       // console.log(error.config);
       // console.log(error.response);
       if (error.response && error.response.status == 400) {
+        message = error.response.data.message
         otherFail(dispatch, error.response.data.message);
       } else if (error.response && error.response.status == 401) {
+        message = 'Auth Fail'
         otherFail(dispatch, 'Auth Fail');
         _logOut()
       } else {
-        const message = L('connectionError');
+        message = L('connectionError');
         otherFail(dispatch, message);
       }
+      Alert.alert(message)
     })
   }
 }
@@ -81,6 +85,6 @@ const _logOut = async () => {
   try {
     await AsyncStorage.removeItem('user');
     // this.props.clearUser()
-    Actions.reset('authentication');
+    Actions.reset('auth');
   } catch (e) { }
 };

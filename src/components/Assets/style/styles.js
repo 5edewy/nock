@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         fontFamily: Regular, fontSize: wp(3.6), color: DarkPri
     },
     medDarkText: {
-        fontFamily: Medium, color: DarkPri, fontSize: wp(3.6)
+        fontFamily: Medium, color: DarkPri, fontSize: wp(3.6), textAlign: 'center'
     },
     lightDarkText: {
         fontFamily: Light, fontSize: wp(3.2), color: DarkPri

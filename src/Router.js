@@ -83,7 +83,7 @@ const Routercomponent = () => {
 
 
 
-          <Scene key="BuyChips" component={BuyChips} hideNavBar />
+          <Scene key="BuyChips" initial component={BuyChips} hideNavBar />
           <Scene key="Scan" component={ScanChips} hideNavBar />
           <Scene key="Rests" component={Resturants} hideNavBar />
           <Scene key="Menu" component={Menu} hideNavBar />

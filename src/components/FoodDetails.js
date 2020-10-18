@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image,  TouchableWithoutFeedback, Modal, TextInput, Switch } from 'react-native'
+import { View, Text, Image, TouchableWithoutFeedback, Modal, TextInput, Switch } from 'react-native'
 import { Container, Content, Icon, Card, Button, Item } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
@@ -35,9 +35,12 @@ class FoodDetails extends Component {
                     flexDirection: 'row', alignItems: 'center', marginTop: hp(4),
                     paddingHorizontal: wp(3),
                 }}>
-                    <View style={{ width: wp(25) }}>
-                        <Icon name="left" type="AntDesign" />
-                    </View>
+                    <TouchableWithoutFeedback onPress={() => Actions.pop()}>
+                        <View style={{ width: wp(25) }}>
+                            <Icon name="left" type="AntDesign" />
+                        </View>
+                    </TouchableWithoutFeedback>
+
                     <Text style={{ ...styles.boldDarkText, fontSize: wp(5.2) }}>Product name</Text>
 
 
@@ -123,8 +126,8 @@ class FoodDetails extends Component {
                     <Text style={{ ...styles.midWhiteTextForMainButton, color: '#1e1e1d' }}>Rate product</Text>
                 </Button>
 
-                <Button 
-                onPress={()=> Actions.Payment()}
+                <Button
+                    onPress={() => Actions.Payment()}
                     style={{ ...styles.mainDarkButton, marginTop: hp(2), marginBottom: hp(3) }}>
                     <Text style={styles.midWhiteTextForMainButton}>Proceed</Text>
                 </Button>

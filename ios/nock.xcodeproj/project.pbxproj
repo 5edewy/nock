@@ -13,6 +13,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		16B7BF1A71984581B55A8755 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9300EF6EEAC74949B33EC540 /* MaterialCommunityIcons.ttf */; };
+		21A69FAB2538971A000BD25F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21A69FAA2538971A000BD25F /* LaunchScreen.storyboard */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -23,7 +24,6 @@
 		6B3B6ADB71394C0CBE56A0BA /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D2B9D922107E46F08687DDE5 /* Poppins-Regular.ttf */; };
 		70246F1BC2264EA0A97BB527 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 460FA8AAEDD147FF8400E4C2 /* AntDesign.ttf */; };
 		7FCE7198D56E406B9FF380B2 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5722A909A3154C50914893D3 /* SimpleLineIcons.ttf */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8A18BF30B81B46F3A46CE57A /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FBF0CBF5131A4F998AD25D97 /* Poppins-Thin.ttf */; };
 		A90B4888294B44228B606B80 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DFFA5BC00EF4C938BE83207 /* FontAwesome5_Regular.ttf */; };
 		AA7D07A0CBBE4857AE1AC865 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7A6F989CE8414AD485662345 /* MaterialIcons.ttf */; };
@@ -78,6 +78,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = nock/main.m; sourceTree = "<group>"; };
 		17F64B4BAB6125956134A289 /* Pods-nock-nockTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nock-nockTests.debug.xcconfig"; path = "Target Support Files/Pods-nock-nockTests/Pods-nock-nockTests.debug.xcconfig"; sourceTree = "<group>"; };
 		1862FC77041149D9B9C16497 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		21A69FAA2538971A000BD25F /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ../../LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2B460F15BD314BEB82DA02E3 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../src/components/Assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* nock-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "nock-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* nock-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "nock-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,7 +92,6 @@
 		6965E6720E5E490A8ED9DD90 /* rubicon-icon-font.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "rubicon-icon-font.ttf"; path = "../node_modules/native-base/Fonts/rubicon-icon-font.ttf"; sourceTree = "<group>"; };
 		78E876F842CF48963EC35E1C /* libPods-nock-nockTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nock-nockTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A6F989CE8414AD485662345 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = nock/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9300EF6EEAC74949B33EC540 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		9311521AA1BF2AAE71E574D1 /* Pods-nock.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nock.release.xcconfig"; path = "Target Support Files/Pods-nock/Pods-nock.release.xcconfig"; sourceTree = "<group>"; };
 		95F9A97C0B75445786755220 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -174,7 +174,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				21A69FAA2538971A000BD25F /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = nock;
@@ -410,7 +410,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				BA67625233E6420EA6F510B9 /* Poppins-Bold.ttf in Resources */,
 				D2329E443DC1441FA5D2B393 /* Poppins-ExtraBold.ttf in Resources */,
@@ -428,6 +427,7 @@
 				A90B4888294B44228B606B80 /* FontAwesome5_Regular.ttf in Resources */,
 				BC7877B8BCD543B6AA7199D0 /* FontAwesome5_Solid.ttf in Resources */,
 				CC2B095480AE4836AB04021A /* Fontisto.ttf in Resources */,
+				21A69FAB2538971A000BD25F /* LaunchScreen.storyboard in Resources */,
 				B23EA53364F943D69A120CDE /* Foundation.ttf in Resources */,
 				CECBE9DDE63E40B2B240A09B /* Ionicons.ttf in Resources */,
 				16B7BF1A71984581B55A8755 /* MaterialCommunityIcons.ttf in Resources */,

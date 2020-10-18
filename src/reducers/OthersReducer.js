@@ -4,7 +4,7 @@ import {
 
 
 const INITAL_STATE = {
-  loading: false, message: '', countries: [], cities: []
+  loading: false, message: '', countries: [], cities: [], products: [], item: null, favorite: []
 };
 
 export default (state = INITAL_STATE, action) => {
@@ -23,17 +23,20 @@ export default (state = INITAL_STATE, action) => {
       return { ...state, loading: true }
     case OTHER_API_SUCCESS:
       const data = action.payload.data.data
-      // console.log(data, action.payload.api);
       switch (action.payload.api) {
         case 'country':
           return { ...state, countries: data.countries, loading: false }
         case 'city':
           return { ...state, cities: data.cities, loading: false }
+        case 'products':
+          return { ...state, products: data.products, loading: false }
+        case 'favorite':
+          return { ...state, favorite: data.favorite, loading: false }
         default:
           return state
       }
     case OTHER_API_FAIL:
-      return { ...state, loading: false, message: action.payload, onRefresh: false }
+      return { ...state, loading: false, message: action.payload, }
     case CHANGE_VALUE:
       const value = action.payload
       return { ...state, ...value }
