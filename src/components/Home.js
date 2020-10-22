@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
     View, Text, Image, TouchableWithoutFeedback, Animated, Alert, Easing, FlatList, Modal, TextInput, Platform, Linking
 } from 'react-native'
-import { Button, Card, Container, Content, Input, Row } from 'native-base';
+import { Button, Card, Container, Content, Icon, Input, Row } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
 import { Actions } from 'react-native-router-flux';
@@ -16,23 +16,19 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 const linkData = [
     { name: 'Snap chat', key: 'snap', image: require('./Assets/images/Snapchat.png') },
-    { id: 2, name: 'Apple', key: 'apple', image: require('./Assets/images/Apple.png') },
-    // { id: 3, name: 'Android', key: 'android', image: require('./Assets/images/Android.png') },
-    // { id: 4, name: 'Html5', key: 'html', image: require('./Assets/images/html.png') },
-    // { id: 5, name: 'Bitcoin', key: 'bitccoin', image: require('./Assets/images/Bitcoin.png') },
+
     { name: 'contact', key: 'contact', image: require('./Assets/images/contact.png') },
-    // { name: 'Apple', key: 'apple', image: require('./Assets/images/Apple.png') },
-    { name: 'Spotify', key: 'spotify', image: require('./Assets/images/Spotify.png') },
-    { name: 'Telegram', key: 'telgram', image: require('./Assets/images/Telegram.png') },
-    { name: 'textme', key: 'textme', image: require('./Assets/images/textme.png') },
+    { name: 'WhatsApp', key: 'wechat', image: require('./Assets/images/wechat.png') },
+    { name: 'textme', key: 'textme', image: require('./Assets/images/text.png') },
     { name: 'google', key: 'google', image: require('./Assets/images/googlr.png') },
-    { name: 'Dropbox', key: 'dropbox', image: require('./Assets/images/Dropbox.png') },
-    // { id: 13, name: 'html', key: 'html', image: require('./Assets/images/html.png') },
-    { name: 'mail', key: 'mail', image: require('./Assets/images/mail.png') },
-    { name: 'Skype', key: 'sky', image: require('./Assets/images/Skype.png') },
-    { name: 'Linkedin', key: 'linkedin', image: require('./Assets/images/Linkedin.png') },
-    { name: 'Facebook', key: 'face', image: require('./Assets/images/face.png') },
-    { name: 'Twitter', key: 'twit', image: require('./Assets/images/twit.png') },
+
+    { name: 'Linkedin', key: 'Linkedin', image: require('./Assets/images/Linkedin.png') },
+    { name: 'tik-tok', key: 'tik-tok', image: require('./Assets/images/tik-tok.png') },
+    { name: 'Sound Cloud', key: 'sound', image: require('./Assets/images/sound.png') },
+    { name: 'E-mail', key: 'mail', image: require('./Assets/images/email.png') },
+    { name: 'Youtube', key: 'Youtube', image: require('./Assets/images/Youtube.png') },
+    { name: 'Facebook', key: 'face', image: require('./Assets/images/facebook.png') },
+    { name: 'Twitter', key: 'twit', image: require('./Assets/images/twiiter.png') },
     { name: 'Instagram', key: 'insta', image: require('./Assets/images/insta.png') },
 
 
@@ -40,8 +36,8 @@ const linkData = [
 class Home extends Component {
 
     state = {
-        scanButton: new Animated.Value(wp(100)),
-        openSideMenu: new Animated.Value(wp(-100)),
+        scanButton: new Animated.Value(wp(L('scanOpenStart'))),
+        openSideMenu: new Animated.Value(wp(L("sidemenu"))),
         addLinkModal: false,
         selectedLink: null,
         selectedLinkImage: {},
@@ -55,11 +51,14 @@ class Home extends Component {
     }
     componentDidMount() {
         const { user, userApi } = this.props
-        userApi('GET', 'getSocialMedia/' + user.username, '', user.access, 'socail')
+        if (user) {
+            userApi('GET', 'getSocialMedia/' + user.username, '', user.access, 'socail')
+        }
+        // console.log(user);
         NfcManager.start();
 
         Animated.timing(this.state.scanButton, {
-            toValue: wp(88), duration: 1000, easing: Easing.ease, useNativeDriver: true
+            toValue: wp(L('scanOpen')), duration: 1000, easing: Easing.ease, useNativeDriver: true
         }).start()
     }
     componentWillUnMount() {
@@ -151,12 +150,12 @@ class Home extends Component {
     }
     _sidemenuOn() {
         Animated.timing(this.state.openSideMenu, {
-            toValue: 1, duration: 500, useNativeDriver: true, easing: Easing.ease
+            toValue: L("sidemenuTovalue"), duration: 500, useNativeDriver: true, easing: Easing.ease
         }).start()
     }
     _sidemenuOff() {
         Animated.timing(this.state.openSideMenu, {
-            toValue: wp(-100), duration: 300, useNativeDriver: true, easing: Easing.back()
+            toValue: wp(L("sidemenu")), duration: 300, useNativeDriver: true, easing: Easing.back()
         }).start()
     }
 
@@ -269,7 +268,7 @@ class Home extends Component {
                             } />
                         <View style={{ marginHorizontal: wp(2) }}>
                             <Text style={styles.regWhiteText} >{user && user.name}</Text>
-                            <Text style={styles.regWhiteText}>43 pops</Text>
+                            {/* <Text style={styles.regWhiteText}>43 pops</Text> */}
                         </View>
                     </View>
                     <TouchableWithoutFeedback onPress={() => Actions.push('Scan', { user })}>
@@ -285,7 +284,7 @@ class Home extends Component {
 
 
 
-                        <Text style={styles.boldDarkText} >My Social Links</Text>
+                        <Text style={styles.boldDarkText} >{L('My Social Links')}</Text>
 
                         <View style={styles.viewForSocialImage}>
                             {minSocial.map((item, index) => {
@@ -314,7 +313,7 @@ class Home extends Component {
                             </View>
                         </TouchableWithoutFeedback>
                         <View style={{ marginTop: hp(5) }}>
-                            <Text style={styles.boldDarkText} >Text me</Text>
+                            <Text style={styles.boldDarkText} >{L('Text me')}</Text>
                             <View style={styles.viewForSocialImage}>
                                 {minSocial.map((item, index) => {
                                     const social = this.filterObject(item.media_name, 'textme')
@@ -335,7 +334,7 @@ class Home extends Component {
                         </View>
 
                         <View style={{ marginTop: hp(5) }}>
-                            <Text style={styles.boldDarkText} >My Contacts</Text>
+                            <Text style={styles.boldDarkText} >{L('My Contacts')}</Text>
                             <View style={styles.viewForSocialImage}>
                                 {minSocial.map((item, index) => {
                                     const social = this.filterObject(item.media_name, 'contact')
@@ -374,10 +373,12 @@ class Home extends Component {
                                 alignSelf: 'center', borderRadius: wp(8), borderWidth: 2, borderColor: '#fff'
                             }}>
                                 <Image style={styles.personalImage}
-                                    source={require('./Assets/images/man.png')} />
+                                    source={
+                                        user && user.photo ? { uri: user.photo } : require('./Assets/images/man.png')
+                                    } />
                                 <View style={{ marginHorizontal: wp(2) }}>
-                                    <Text style={styles.regDarlText} >Adel Mehanna</Text>
-                                    <Text style={styles.regDarlText}>43 pops</Text>
+                                    <Text style={styles.regDarlText} >{user && user.name}</Text>
+                                    {/* <Text style={styles.regDarlText}>43 pops</Text> */}
                                 </View>
                             </View>
                             <View style={styles.lineGray} />
@@ -386,27 +387,52 @@ class Home extends Component {
                                 style={styles.sideMenuButton}>
                                 <Image style={styles.iconInButton}
                                     source={require('./Assets/images/buy.png')} />
-                                <Text style={{ ...styles.midWhiteTextForMainButton, fontSize: wp(3.8) }}>Buy Chips</Text>
+                                <Text style={{ ...styles.midWhiteTextForMainButton, fontSize: wp(3.8) }}>{L('Buy Chips')}</Text>
                             </Button>
 
 
                             <View style={styles.lineForImageandName}>
                                 <Image style={styles.pageIcon}
                                     source={require('./Assets/images/homei.png')} />
-                                <Text style={styles.regDarlText}>Home</Text>
+                                <Text style={styles.regDarlText}>{L('Home')}</Text>
                             </View>
+                            <TouchableWithoutFeedback onPress={() => Actions.push('EditMyProfile')}>
+                                <View style={styles.lineForImageandName}>
+                                    <Icon name="user-edit" type='FontAwesome5' style={{ fontSize: wp(6), marginRight: wp(5) }} />
+                                    <Text style={styles.regDarlText}>{L('My Profile')}</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback onPress={() => Actions.push('MyAdress')}>
+                                <View style={styles.lineForImageandName}>
+                                    <Icon name="address" type='Entypo' style={{ fontSize: wp(6), marginRight: wp(5) }} />
+                                    <Text style={styles.regDarlText}>{L('My Address')}</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback onPress={() => Actions.push('MyOrders')}>
+                                <View style={styles.lineForImageandName}>
+                                    <Icon name="shopping-cart" type='FontAwesome' style={{ fontSize: wp(6), marginRight: wp(5) }} />
+                                    <Text style={styles.regDarlText}>{L('My Orders')}</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback onPress={() => Actions.push('Favorite')}>
+                                <View style={styles.lineForImageandName}>
+                                    <Icon name="favorite" type='Fontisto' style={{ fontSize: wp(6), marginRight: wp(5) }} />
+                                    <Text style={styles.regDarlText}>{L('favorite')}</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback onPress={() => Actions.reset('language')}>
+                                <View style={styles.lineForImageandName}>
+                                    <Icon name="language" type='FontAwesome' style={{ fontSize: wp(6), marginRight: wp(5) }} />
+                                    <Text style={styles.regDarlText}>{L('Language')}</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback onPress={() => Actions.push('ConactUS')}>
+                                <View style={styles.lineForImageandName}>
+                                    <Icon name="phone" type='FontAwesome' style={{ fontSize: wp(6), marginRight: wp(5) }} />
+                                    <Text style={styles.regDarlText}>{L('Contact US')}</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
 
-                            {/* <View style={styles.lineForImageandName}>
-                                <Image style={styles.pageIcon}
-                                    source={require('./Assets/images/mypay.png')} />
-                                <Text style={styles.regDarlText}>My Payment</Text>
-                            </View> */}
-
-                            <View style={styles.lineForImageandName}>
-                                <Image style={styles.pageIcon}
-                                    source={require('./Assets/images/contactu.png')} />
-                                <Text style={styles.regDarlText}>Contact Us</Text>
-                            </View>
 
 
                             {/* <TouchableWithoutFeedback onPress={() => { this._sidemenuOff(), Actions.Rests() }}>
@@ -418,18 +444,14 @@ class Home extends Component {
                             </TouchableWithoutFeedback> */}
 
 
-                            <View style={styles.lineForImageandName}>
-                                <Image style={styles.pageIcon}
-                                    source={require('./Assets/images/sett.png')} />
-                                <Text style={styles.regDarlText}>Setting</Text>
-                            </View>
+
 
                             <View style={{ ...styles.lineGray, marginTop: hp(8) }} />
                             <TouchableWithoutFeedback onPress={() => this.outLog()}>
                                 <View style={{ ...styles.lineForImageandName, alignSelf: 'center', marginTop: hp(1) }}>
                                     <Image style={styles.pageIcon}
                                         source={require('./Assets/images/out.png')} />
-                                    <Text style={styles.regDarlText}>Logout</Text>
+                                    <Text style={styles.regDarlText}>{L('Logout')}</Text>
                                 </View>
                             </TouchableWithoutFeedback>
 
@@ -477,7 +499,7 @@ class Home extends Component {
                                     <Text style={{
                                         ...styles.boldDarkText, marginLeft: wp(5),
                                         marginVertical: hp(2)
-                                    }}>Enter your {this.state.selectedLink} link</Text>
+                                    }}>{L('Enter your')} {this.state.selectedLink} {L('link')}</Text>
 
                                     <View style={styles.modalViewIII}>
                                         <Image style={styles.imageiconSelect}
@@ -498,7 +520,7 @@ class Home extends Component {
                                                 <View style={{ ...styles.rowAlignsentre }}>
                                                     <Image style={styles.icondelete}
                                                         source={require('./Assets/images/link.png')} />
-                                                    <Text style={{ ...styles.regDarlText }}>Open Link</Text>
+                                                    <Text style={{ ...styles.regDarlText }}>{L('Open Link')}</Text>
                                                 </View>
                                             </TouchableWithoutFeedback>
                                             <TouchableWithoutFeedback onPress={() => this.removeSocail(key)}>
@@ -507,13 +529,13 @@ class Home extends Component {
                                                 }} >
                                                     <Image style={styles.icondelete}
                                                         source={require('./Assets/images/delete.png')} />
-                                                    <Text style={{ ...styles.regDarlText, color: '#e44040' }}>Delete</Text>
+                                                    <Text style={{ ...styles.regDarlText, color: '#e44040' }}>{L('Delete')}</Text>
                                                 </View>
                                             </TouchableWithoutFeedback>
                                         </View>
                                         : null}
                                     <Button style={{ ...styles.mainDarkButton, marginTop: hp(15), marginBottom: hp(3) }} onPress={() => this.saveSocial2()}>
-                                        <Text style={styles.midWhiteTextForMainButton}>Save Link</Text>
+                                        <Text style={styles.midWhiteTextForMainButton}>{L('Save Link')}</Text>
                                     </Button>
 
 
@@ -522,7 +544,7 @@ class Home extends Component {
                                     <Text style={{
                                         ...styles.boldDarkText, marginLeft: wp(5),
                                         marginVertical: hp(2)
-                                    }}>Choose a social link to add</Text>
+                                    }}>{L('Choose a social link to add')}</Text>
 
 
 
@@ -535,7 +557,7 @@ class Home extends Component {
                                         keyExtractor={(item, index) => index.toString()}
                                     />
                                     <Button style={{ ...styles.mainDarkButton, marginTop: hp(15), marginBottom: hp(3) }} onPress={() => this.saveSocial()}>
-                                        <Text style={styles.midWhiteTextForMainButton}>Save Link</Text>
+                                        <Text style={styles.midWhiteTextForMainButton}>{L('Save Link')}</Text>
                                     </Button>
                                 </View> : null}
 
@@ -562,7 +584,7 @@ class Home extends Component {
 
 
 
-                                <Text style={styles.boldDarkText} >Social Links</Text>
+                                <Text style={styles.boldDarkText} ></Text>
 
                                 <View style={styles.viewForSocialImage}>
                                     {nockedSocail.map((item, index) => {
@@ -582,7 +604,7 @@ class Home extends Component {
                                 </View>
 
                                 <View style={{ marginTop: hp(5) }}>
-                                    <Text style={styles.boldDarkText} >Text me</Text>
+                                    <Text style={styles.boldDarkText} >{L('Text me')}</Text>
                                     <View style={styles.viewForSocialImage}>
                                         {nockedSocail.map((item, index) => {
                                             const social = this.filterObject(item.media_name, 'textme')
@@ -603,7 +625,7 @@ class Home extends Component {
                                 </View>
 
                                 <View style={{ marginTop: hp(5) }}>
-                                    <Text style={styles.boldDarkText} >My Contacts</Text>
+                                    <Text style={styles.boldDarkText} >{L('My Contacts')}</Text>
                                     <View style={styles.viewForSocialImage}>
                                         {nockedSocail.map((item, index) => {
                                             const social = this.filterObject(item.media_name, 'contact')

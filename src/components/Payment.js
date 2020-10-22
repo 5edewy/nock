@@ -41,7 +41,7 @@ class Payment extends Component {
             <Container>
                 <View style={styles.header}>
                     <View style={{ width: wp(35) }}>
-                        <Icon name="left" type="AntDesign" />
+                        <Icon name={L('arrow')} type="AntDesign" />
                     </View>
                     <Text style={{ ...styles.boldDarkText, fontSize: wp(5.2) }}>My Payment</Text>
 

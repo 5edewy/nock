@@ -42,8 +42,6 @@ export const clearMessage = text => {
   };
 };
 export const userApi = (method, api, data, sessiontoken, flag) => {
-  // console.log(sessiontoken);
-  // const header = { ...headers, ...{ "Authorization": 'Bearer ' + token } }
   return (dispatch) => {
     dispatch({ type: USER_POST_DATE });
 
@@ -54,17 +52,20 @@ export const userApi = (method, api, data, sessiontoken, flag) => {
       data: method == "POST" ? data : '',
       params: method == "GET" ? data : ''
     }).then(function (res) {
-      // console.clear();
-      // console.log(res);
 
+      if (api == "addEditAddress") {
+        Actions.pop()
+      }
+      if (flag == "address" && res.data.data.message) {
+        Alert.alert(res.data.data.message)
+      }
+      if (flag == "edit") {
+        Alert.alert(L('editUserSuccess'))
+      }
       userPostSuccess(dispatch, res.data, flag, sessiontoken);
 
     }).catch(function (error) {
       let message
-      // console.clear();
-      // console.log(error);
-      // console.log(error.config);
-      // console.log(error.response);
       if (error.response && error.response.status == 400) {
         message = error.response.data.message
         userPostFail(dispatch, error.response.data.message);
@@ -91,24 +92,26 @@ export const userPostFail = (dispatch, error) => {
 
 };
 
-export const userPostSuccess = (dispatch, data, api) => {
+export const userPostSuccess = (dispatch, data, api, token) => {
   // console.log(data);
 
-  const res = { data, api }
-  dispatch({
-    type: USER_POST_DATE_SUCCESS,
-    payload: res,
-  });
+  let res = { data, api }
   if (api == "login" || api == "register") {
     Actions.reset('MainStack')
     // console.log(data.data);
     _storeData(data.data.user)
   } else if (api == "edit") {
     const user = { ...data.data.user, access: token }
+    res = { data: user, api }
     _storeData(user)
   } else if (api == "logout") {
     _logOut()
   }
+  dispatch({
+    type: USER_POST_DATE_SUCCESS,
+    payload: res,
+  });
+
 
 }
 

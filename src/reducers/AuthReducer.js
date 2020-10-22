@@ -5,7 +5,7 @@ import {
 
 
 const INITAL_STATE = {
-  message: '', loading: false, user: null, minSocial: [], userSocial: null, nockedSocail: [], nockedSocailUser: null,
+  message: '', loading: false, user: null, minSocial: [], userSocial: null, nockedSocail: [], nockedSocailUser: null, address: [],
   updateNocked: false
 };
 export default (state = INITAL_STATE, action) => {
@@ -29,10 +29,12 @@ export default (state = INITAL_STATE, action) => {
           return { ...state, loading: false, message: data.message, resetSucc: true }
         case 'login':
           return { ...state, loading: false, user: data.user }
-        case 'editUser':
-          return { ...state, loading: false, user: data.user, message: data.message }
+        case 'edit':
+          return { ...state, loading: false, user: action.payload.data }
         case 'user':
           return { ...state, loading: false, user: data.data }
+        case 'address':
+          return { ...state, loading: false, address: data.address }
         case 'socail':
           return { ...state, loading: false, minSocial: data.social, userSocial: data.user }
         case 'nockedSocail':

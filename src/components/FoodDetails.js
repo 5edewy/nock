@@ -37,7 +37,7 @@ class FoodDetails extends Component {
                 }}>
                     <TouchableWithoutFeedback onPress={() => Actions.pop()}>
                         <View style={{ width: wp(25) }}>
-                            <Icon name="left" type="AntDesign" />
+                            <Icon name={L('arrow')} type="AntDesign" />
                         </View>
                     </TouchableWithoutFeedback>
 

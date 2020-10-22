@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground, Alert } from 'react-native'
+import { View, Text, ImageBackground, Alert, TouchableWithoutFeedback } from 'react-native'
 import { Button, Container, Content, Input, Row, Picker, Icon } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
@@ -8,7 +8,7 @@ import { userApi, otherApi } from '../actions';
 import { Spinner } from './Assets/common';
 import { connect } from 'react-redux';
 import { L } from '../Config';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+
 
 class SignUp extends Component {
     state = {
@@ -138,6 +138,7 @@ class SignUp extends Component {
                                     this.setState({ country })
                                 }}
                             >
+                                <Picker.Item label={L('country')} value={0} key={0} />
                                 {countries.map((item, index) => {
                                     return (
                                         <Picker.Item label={item.name} value={item.id} key={index} />
@@ -158,6 +159,7 @@ class SignUp extends Component {
                                 iosHeader={L('selectCity')}
                                 onValueChange={(city) => this.setState({ city })}
                             >
+                                <Picker.Item label={L('city')} value={0} key={0} />
                                 {cities.map((item, index) => {
                                     return (
                                         <Picker.Item label={item.name} value={item.id} key={index} />

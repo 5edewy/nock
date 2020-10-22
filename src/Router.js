@@ -10,7 +10,7 @@ import BuyChips from './components/BuyChips';
 import ScanChips from './components/ScanChips';
 import Resturants from './components/Resturants';
 import Menu from './components/Menu';
-import FoodDetails from './components/FoodDetails';
+import Favorite from './components/Favorite';
 import Payment from './components/Payment';
 import AnimationRest from './components/AnimationRest';
 import Intro from './components/Intro';
@@ -21,6 +21,9 @@ import MyCard from './components/MyCard';
 import ContactUS from './components/ContactUS';
 import MyAddress from './components/MyAddress';
 import AddAddress from './components/AddAddress';
+import Pay from './components/Pay';
+import Order from './components/Order';
+import Language from './components/Language';
 
 
 
@@ -64,69 +67,52 @@ const Routercomponent = () => {
     <Router>
       <Stack key="root" >
         <Stack key='intro' component={Intro} hideNavBar />
+
         <Stack key='auth' hideNavBar>
           <Scene key="Reg" component={Register} hideNavBar />
           <Scene key="SignUp" component={SignUp} hideNavBar />
           <Scene key="SignIn" component={SignIn} hideNavBar />
         </Stack>
+        <Stack key='language' component={Language} hideNavBar />
 
 
-
-        <Stack key="MainStack" hideNavBar initial >
-          <Tabs key="MainFlow" showLabel={false}
+        <Stack key="MainStack" hideNavBar  >
+          {/* <Tabs key="MainFlow" showLabel={false}
             tabBarStyle={styles.tabBarStyles}
             hideNavBar
-          >
-            <Scene key="Home" component={Home} hideNavBar icon={TabIcon}
-              iconName={require('./components/Assets/images/homei.png')}
-              tabText="Home" />
-            {/* <Scene key="People" component={SignUp} hideNavBar icon={TabIcon}
+          > */}
+          <Scene key="Home" component={Home} hideNavBar /*icon={TabIcon}
+            iconName={require('./components/Assets/images/homei.png')}
+            tabText="Home" *//>
+          {/* <Scene key="People" component={SignUp} hideNavBar icon={TabIcon}
               iconName={require('./components/Assets/images/pep.png')}
               tabText="People" initial /> */}
 
-          </Tabs>
+          {/* </Tabs> */}
 
 
 
 
 
           <Scene key="BuyChips" component={BuyChips} hideNavBar />
+          <Scene key="Favorite" component={Favorite} hideNavBar />
           <Scene key="Scan" component={ScanChips} hideNavBar />
-          <Scene key="Rests" component={Resturants} hideNavBar />
+          {/* <Scene key="Rests" component={Resturants} hideNavBar  />
           <Scene key="Menu" component={Menu} hideNavBar />
-          <Scene key="Details" component={FoodDetails} hideNavBar />
+          <Scene key="Details" component={FoodDetails} hideNavBar /> */}
           <Scene key="Payment" component={Payment} hideNavBar />
+          <Scene key="pay" component={Pay} hideNavBar />
 
 
           <Scene key="EditMyProfile" component={EditMyProfile} hideNavBar />
           <Scene key="Myprofile" component={MyProfile} hideNavBar />
           <Scene key="MyOrders" component={MyOrders} hideNavBar />
+          <Scene key="order" component={Order} hideNavBar />
           <Scene key="Mycard" component={MyCard} hideNavBar />
           <Scene key="ConactUS" component={ContactUS} hideNavBar />
-          <Scene key="MyAdress" component={MyAddress} hideNavBar initial />
+          <Scene key="MyAdress" component={MyAddress} hideNavBar />
           <Scene key="AddAddress" component={AddAddress} hideNavBar />
-
-
-
-
-
-
-
-
-          <Scene key="Resssts" component={AnimationRest} hideNavBar />
-
-
-
-
-
-
-
-
-
-
-
-
-
+          {/* <Scene key="Resssts" component={AnimationRest} hideNavBar /> */}
         </Stack>
       </Stack>
     </Router>

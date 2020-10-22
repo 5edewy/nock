@@ -1,50 +1,87 @@
 import React, { Component } from 'react';
-import { View, Text, } from 'react-native'
+import { View, Text, TouchableWithoutFeedback } from 'react-native'
 import { Container, Content, Icon, Button, Card } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
 import { Actions } from 'react-native-router-flux';
+import { otherApi, userApi } from '../actions';
+import { Spinner } from './Assets/common';
+import { connect } from 'react-redux';
+import { L } from '../Config';
+
 
 class MyAddress extends Component {
-
-
+    componentDidMount() {
+        const { userApi, user } = this.props
+        userApi('GET', 'myAddress', '', user.access, 'address')
+    }
+    _renderLoading() {
+        const { loading } = this.props
+        if (loading) {
+            return <Spinner size='large' />;
+        }
+    }
 
     render() {
+        const { address, userApi, user } = this.props
         return (
             <Container>
-                <View style={styles.header}>
-                    <View style={{ width: wp(33) }}>
-                        <Icon name="left" type="AntDesign" />
-                    </View>
-                    <Text style={{ ...styles.boldDarkText, fontSize: wp(5.2) }}>My Address</Text>
-
+                <View style={[styles.header, { justifyContent: 'space-between' }]}>
+                    <TouchableWithoutFeedback onPress={() => Actions.pop()}>
+                        <View style={{ width: wp(10) }}>
+                            <Icon name={L('arrow')} type="AntDesign" />
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <Text style={{ ...styles.boldDarkText, fontSize: wp(5.2) }}>{L('My Address')}</Text>
+                    <View style={{ width: wp(10) }} />
                 </View>
                 <Content>
                     <View style={{ ...styles.View90, marginTop: hp(6) }} >
+                        {address.map((item) => (
+                            <Card style={styles.CardAddress} key={item.id}>
+                                <Text style={{ ...styles.regDarlText, color: '#848484' }}>
+                                    {item.district + '-' + item.street + '-' + item.city.name + '/' + item.country.name}
+                                </Text>
+                                <View style={{ ...styles.row_aliCentre, marginTop: hp(2) }}>
+                                    <TouchableWithoutFeedback
+                                        onPress={() => userApi('GET', 'deleteAddress/' + item.id, '', user.access, 'address')}
+                                    >
+                                        <View style={styles.smallcheckbos}>
+                                            <Icon name="delete" type='AntDesign' style={{ fontSize: wp(4.3) }} />
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                    <TouchableWithoutFeedback onPress={() => Actions.AddAddress({ item })}>
+                                        <View style={styles.smallcheckbos}>
+                                            <Icon name="edit" type="AntDesign" style={{ fontSize: wp(4.3) }} />
+                                        </View>
+                                    </TouchableWithoutFeedback>
 
-                        <Card style={styles.CardAddress}>
-                            <Text style={{ ...styles.regDarlText, color: '#848484' }}>إسم الشارع, جدة, المملكة العربية السعودية</Text>
-                            <View style={{ ...styles.row_aliCentre, marginTop: hp(2) }}>
-                                <View style={styles.smallcheckbos}>
-                                    <Icon name="check" type="AntDesign" style={{ fontSize: wp(4.3) }} />
+
                                 </View>
-                                <Text style={{ ...styles.semiBoldDarkText, marginHorizontal: wp(2) }}>Choose as default </Text>
-                            </View>
-                        </Card>
+                            </Card>
+                        )
+                        )}
 
                         <Button onPress={() => Actions.AddAddress()}
                             style={{ ...styles.adrrButton, marginTop: hp(4) }}>
                             <Icon name="pluscircleo" type="AntDesign" style={{ fontSize: wp(7.5), color: '#fff' }} />
-                            <Text style={{ ...styles.lightDarkText, color: '#fff' }}>Add new address</Text>
+                            <Text style={{ ...styles.lightDarkText, color: '#fff' }}>{L('Add Address')}</Text>
                         </Button>
                     </View>
                 </Content>
-                <Button style={{ ...styles.mainDarkButton, marginTop: hp(3), marginBottom: hp(3) }}>
-                    <Text style={styles.midWhiteTextForMainButton}>Confirm Address</Text>
-                </Button>
+
+                { this._renderLoading()}
             </Container>
         );
     }
 }
 
-export default MyAddress;
+
+const mapStateToProps = ({ auth }) => {
+    const { user, loading, address } = auth
+
+    return { user, loading, address };
+};
+
+export default connect(mapStateToProps, { userApi })(MyAddress);
+

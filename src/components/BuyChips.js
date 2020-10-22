@@ -7,7 +7,7 @@ import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { otherApi, changeValue } from '../actions';
 import { Spinner } from './Assets/common';
-import { L } from '../Config';
+import { addCart, L } from '../Config';
 import FastImage from 'react-native-fast-image'
 
 
@@ -15,18 +15,26 @@ import FastImage from 'react-native-fast-image'
 
 class BuyChips extends Component {
     state = {
-        CardScale: new Animated.Value(-1.5),
+        CardScale: new Animated.Value(-1.5), updateCart: 1
 
     }
     componentDidMount() {
         const { user, otherApi } = this.props
         otherApi('GET', 'getProducts', '', user.access, 'products')
+
+
         otherApi('GET', 'favorite', '', user.access, 'favorite')
     }
     startAnimate() {
         Animated.timing(this.state.CardScale, {
             toValue: 1, duration: 500, useNativeDriver: true, easing: Easing.linear
         }).start()
+    }
+    addToCart(item) {
+        const { cart, changeValue } = this.props
+        const newCart = addCart(item, cart)
+        changeValue({ cart: newCart })
+        this.setState({ updateCart: 1 })
     }
 
     _renderChips = ({ item }) => {
@@ -57,7 +65,10 @@ class BuyChips extends Component {
                 <Text style={{ ...styles.medDarkText }} numberOfLines={1}>{item.title}</Text>
 
                 <View style={styles.roundedView}>
-                    <Image source={require('./Assets/images/sallah.png')} />
+                    <TouchableWithoutFeedback onPress={() => this.addToCart(item)}>
+                        <Image source={require('./Assets/images/sallah.png')} />
+                    </TouchableWithoutFeedback>
+
                     <View style={styles.verticalLine} />
                     <TouchableWithoutFeedback onPress={click}>
                         {fav.length > 0 ?
@@ -70,14 +81,14 @@ class BuyChips extends Component {
         )
     }
     _renderLoading() {
-        const { loading, loadingOthers } = this.props
-        if (loading || loadingOthers) {
+        const { loading } = this.props
+        if (loading) {
             return <Spinner size='large' />;
         }
     }
 
     render() {
-        const { products } = this.props
+        const { products, cart } = this.props
         // console.log(products);
         return (
             <Container>
@@ -87,16 +98,19 @@ class BuyChips extends Component {
                 }}>
                     <TouchableWithoutFeedback onPress={() => Actions.pop()}>
                         <View style={{ width: wp(10) }}>
-                            <Icon name="left" type="AntDesign" />
+                            <Icon name={L('arrow')} type="AntDesign" />
                         </View>
                     </TouchableWithoutFeedback>
 
                     <Text style={{ ...styles.boldDarkText, fontSize: wp(5.2) }}>{L('Buy Chips')}</Text>
-                    <TouchableWithoutFeedback>
-                        <View style={{ width: wp(10) }}>
-                            <Icon name="shoppingcart" type="AntDesign" />
-                        </View>
-                    </TouchableWithoutFeedback>
+                    {cart && cart.length > 0 ?
+                        <TouchableWithoutFeedback onPress={() => Actions.push('Mycard')}>
+                            <View style={{ width: wp(10) }}>
+                                <Icon name="shoppingcart" type="AntDesign" />
+                            </View>
+                        </TouchableWithoutFeedback>
+                        : <View style={{ width: wp(10) }} />}
+
                 </View>
                 <Content>
                     <View style={{ ...styles.View90, marginTop: hp(5) }}>
@@ -120,8 +134,8 @@ class BuyChips extends Component {
 
 const mapStateToProps = ({ auth, others }) => {
     const { user } = auth
-    const { loading, products, favorite } = others
-    return { user, loading, products, favorite };
+    const { loading, products, favorite, cart } = others
+    return { user, loading, products, favorite, cart };
 };
 
 export default connect(mapStateToProps, { otherApi, changeValue })(BuyChips);

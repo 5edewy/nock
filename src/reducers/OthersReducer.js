@@ -4,7 +4,7 @@ import {
 
 
 const INITAL_STATE = {
-  loading: false, message: '', countries: [], cities: [], products: [], item: null, favorite: []
+  loading: false, message: '', countries: [], cities: [], products: [], item: null, favorite: [], cart: [], settings: null, orders: []
 };
 
 export default (state = INITAL_STATE, action) => {
@@ -32,6 +32,12 @@ export default (state = INITAL_STATE, action) => {
           return { ...state, products: data.products, loading: false }
         case 'favorite':
           return { ...state, favorite: data.favorite, loading: false }
+        case 'settings':
+          return { ...state, settings: data, loading: false }
+        case 'saveOrder':
+          return { ...state, cart: [], loading: false }
+        case 'orders':
+          return { ...state, orders: data.orders, loading: false }
         default:
           return state
       }

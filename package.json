@@ -7,7 +7,10 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "refresh": "adb shell input keyevent 82",
+    "android_c": "cd android && ./gradlew clean && cd ../",
+    "android_p": "cd android && ./gradlew assembleRelease && cd ../ && react-native run-android --variant=release"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
@@ -20,6 +23,7 @@
     "react-native-fast-image": "^8.3.2",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-i18n": "^2.0.15",
+    "react-native-image-picker": "^2.3.4",
     "react-native-nfc-manager": "^2.2.0",
     "react-native-reanimated": "^1.13.0",
     "react-native-responsive-screen": "^1.4.1",
@@ -30,6 +34,7 @@
     "react-native-simple-encryption": "^1.2.1",
     "react-native-splash-screen": "^3.2.0",
     "react-native-star-rating": "^1.1.0",
+    "react-native-webview": "^10.9.3",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"

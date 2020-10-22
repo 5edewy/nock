@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     // Side Menu 
     lineForImageandName: {
         flexDirection: 'row', marginTop: hp(4), alignItems: 'center',
-        alignSelf: 'flex-start', marginLeft: wp(5)
+        alignSelf: 'flex-start', marginLeft: wp(5), alignContent: 'center'
     },
     pageIcon: {
         width: wp(6), height: hp(4), resizeMode: 'contain', marginRight: wp(5)
@@ -337,12 +337,30 @@ const styles = StyleSheet.create({
     },
     smallcheckbos: {
         width: wp(7), height: hp(3), borderWidth: 1, borderRadius: wp(2), alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center', marginRight: wp(2)
     },
     adrrButton: {
         width: wp(55), backgroundColor: DarkPri, height: hp(6.5), borderRadius: wp(4),
         justifyContent: 'center', alignItems: 'center', alignSelf: 'center', flexDirection: 'row'
-    }
+    },
+    modalContainerlStyle: {
+        position: 'relative',
+        left: 0,
+        right: 0,
+        alignContent: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(52, 52, 52, 0.4)',
+        zIndex: -1,
+        flex: 1,
+    },
+    modalStyle: {
+        justifyContent: 'center',
+        alignSelf: 'center',
+        zIndex: 11,
+        backgroundColor: '#ffffff',
+        padding: 15,
+    },
 
 });
 

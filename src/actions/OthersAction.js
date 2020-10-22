@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Actions } from 'react-native-router-flux';
 import { headers, baseUrl, L } from '../Config';
 import AsyncStorage from '@react-native-community/async-storage';
+import { Alert } from 'react-native';
 
 export const saveItem = (item) => {
   return {
@@ -21,7 +22,6 @@ export const clearUpdate = () => {
 };
 
 export const otherApi = (method, api, data, sessiontoken, flag) => {
-  // const header = { ...headers, ...{ "Authorization": 'Bearer ' + sessiontoken } }
   return (dispatch) => {
     dispatch({ type: OTHER_API });
 
@@ -32,17 +32,20 @@ export const otherApi = (method, api, data, sessiontoken, flag) => {
       data: method == "POST" ? data : '',
       params: method == "GET" ? data : ''
     }).then(function (res) {
-      console.clear();
-      console.log(res);
 
+      if (flag == "contactUs") {
+        Alert.alert(res.data.data.message)
+        Actions.pop()
+      }
+      if (flag == "saveOrder") {
+        Actions.pop()
+        Actions.push('pay', { url: res.data.data.payUrl })
+      }
       otherSuccess(dispatch, res.data, flag, sessiontoken);
 
     }).catch(function (error) {
       let message
-      // console.clear();
-      // console.log(error);
-      // console.log(error.config);
-      // console.log(error.response);
+
       if (error.response && error.response.status == 400) {
         message = error.response.data.message
         otherFail(dispatch, error.response.data.message);

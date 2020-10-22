@@ -15,12 +15,12 @@ class MyProfile extends Component {
         return (
             <Container>
                 <View style={styles.headerForProfile}>
-                    <View style={styles.secheaderProfile}>
-                        <View style={{ width: wp(35) }}>
-                            <Icon name="left" type="AntDesign" style={{ color: '#fff' }} />
+                    <View style={[styles.secheaderProfile, { justifyContent: 'space-between', backgroundColor: 'red', width: wp(90) }]}>
+                        <View style={{ width: wp(10) }}>
+                            <Icon name={L('arrow')} type="AntDesign" style={{ color: '#fff' }} />
                         </View>
-                        <Text style={{ ...styles.boldDarkText, fontSize: wp(5.2), color: '#fff' }}>My Profile</Text>
-
+                        <Text style={{ ...styles.boldDarkText, fontSize: wp(5.2), color: '#fff' }}>{L('My Profile')}</Text>
+                        <View style={{ width: wp(10) }} />
                     </View>
 
                     <View style={styles.absViewHeader}>

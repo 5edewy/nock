@@ -49,15 +49,15 @@ class AnimationRest extends Component {
         const isTop = 0;
         const isBottom = hp(100) - hp(25);
         const isAppearing = hp(100)
-       
+
         const yyy = Animated.add(
             Animated.add(trY, trY.interpolate({
-            inputRange: [0, 0.00001 + index * hp(25)],
-            outputRange: [0, index * hp(-28)],
-            extrapolateRight: "clamp"
+                inputRange: [0, 0.00001 + index * hp(25)],
+                outputRange: [0, index * hp(-28)],
+                extrapolateRight: "clamp"
 
-           })
-        ),
+            })
+            ),
             position.interpolate({
                 inputRange: [isBottom, isAppearing],
                 outputRange: [0, - hp(25) / 4],
@@ -133,7 +133,7 @@ class AnimationRest extends Component {
                     paddingHorizontal: wp(3),
                 }}>
                     <View style={{ width: wp(25) }}>
-                        <Icon name="left" type="AntDesign" />
+                        <Icon name={L('arrow')} type="AntDesign" />
                     </View>
                     <Text style={{ ...styles.boldDarkText, fontSize: wp(5.2) }}>Our Restaurants</Text>
 

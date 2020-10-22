@@ -18,7 +18,7 @@ let languageSession = AsyncStorage.getItem('language')
 export let language
 
 export let baseUrl = 'https://nockapp.net/' + I18n.local + '/mobile/'
-export let paymentUrl = 'https://nockapp.net/ar/payment/'
+export let paymentUrl = 'https://nockapp.net/' + I18n.local + '/pay/'
 export const headers = {
     'Accept': 'application/json',
     // 'content-type': 'multipart/form-data',
@@ -29,6 +29,7 @@ export function changeLng(lang, flag) {
     AsyncStorage.setItem('language', lang)
     I18n.local = lang
     baseUrl = 'https://nockapp.net/' + lang + '/mobile/'
+    paymentUrl = 'https://nockapp.net/' + lang + '/pay/'
     if (lang == 'ar') {
         I18nManager.forceRTL(true);
     } else if (lang == 'en') {
@@ -88,4 +89,35 @@ export function byteToString(bytes) {
         result += String.fromCharCode(bytes[i]);
     }
     return result;
+}
+export function addCart(item, cart) {
+    const check = cart.filter((product) => product.id == item.id)
+    if (check && check.length > 0) {
+        for (let i = 0; i < cart.length; i++) {
+            if (cart[i].id == item.id) {
+                cart[i].qty = Number(item.qty) + Number(1)
+            }
+        }
+    } else {
+        item.qty = 1
+
+        item.product_id = item.id
+        cart.push(item)
+    }
+    return cart
+}
+export function updateCart(item, cart, oper) {
+    for (let i = 0; i < cart.length; i++) {
+        if (cart[i].id == item.id) {
+            if (oper == "plus") {
+                cart[i].qty = Number(item.qty) + Number(1)
+            } else if (oper == "minus" && cart[i].qty != 1) {
+                cart[i].qty = Number(item.qty) - Number(1)
+            } else if (oper == "remove" || cart[i].qty == 1) {
+                cart.splice(i, 1)
+            }
+
+        }
+    }
+    return cart
 }

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, TouchableWithoutFeedback } from 'react-native'
 import { Button, Container, Content, Icon } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
 import { Actions } from 'react-native-router-flux';
 import { Alert } from 'react-native'
 import NfcManager, { Ndef, NfcTech } from 'react-native-nfc-manager';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { L } from '../Config';
 function buildUrlPayload(valueToWrite) {
     return Ndef.encodeMessage([
         Ndef.uriRecord(valueToWrite),
@@ -92,7 +92,7 @@ class ScanChips extends Component {
 
             console.log(resp);
             let ndef = await NfcManager.getNdefMessage();
-            console.log(ndef);
+            // console.log(ndef);
             let bytes = buildUrlPayload(user.username);
             await NfcManager.writeNdefMessage(bytes);
             // console.log('successfully write ndef');
@@ -109,16 +109,16 @@ class ScanChips extends Component {
             <Container>
                 <View style={{
                     flexDirection: 'row', alignItems: 'center', marginTop: hp(5),
-                    paddingHorizontal: wp(3),
+                    paddingHorizontal: wp(3), justifyContent: 'space-between'
                 }}>
                     <TouchableWithoutFeedback onPress={() => Actions.pop()}>
-                        <View style={{ width: wp(35) }}>
-                            <Icon name="left" type="AntDesign" />
+                        <View style={{ width: wp(10) }}>
+                            <Icon name={L('arrow')} type="AntDesign" />
                         </View>
                     </TouchableWithoutFeedback>
 
-                    <Text style={{ ...styles.boldDarkText, fontSize: wp(5.2) }}>Scan nock</Text>
-
+                    <Text style={{ ...styles.boldDarkText, fontSize: wp(5.2) }}>{L('Scan nock')}</Text>
+                    <View style={{ width: wp(10) }} />
                 </View>
                 <Content>
 
@@ -131,7 +131,7 @@ class ScanChips extends Component {
 
                     </View>
                     <Button style={{ ...styles.mainDarkButton, marginTop: hp(15), marginBottom: hp(3) }} onPress={this.writeData}>
-                        <Text style={styles.midWhiteTextForMainButton}>Scan to Save</Text>
+                        <Text style={styles.midWhiteTextForMainButton}>{L('Scan to Save')}</Text>
                     </Button>
                 </Content>
             </Container>

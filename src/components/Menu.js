@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, FlatList, TouchableWithoutFeedback , Animated ,Easing } from 'react-native'
+import { View, Text, Image, FlatList, TouchableWithoutFeedback, Animated, Easing } from 'react-native'
 import { Container, Content, Icon, Card } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
@@ -27,14 +27,14 @@ const restsData = [
 class Menu extends Component {
 
     state = {
-        selected: 1 ,
+        selected: 1,
         CardScale: new Animated.Value(2),
-        
+
     }
 
     componentDidMount = () => {
         Animated.timing(this.state.CardScale, {
-            toValue: 1, duration: 500, useNativeDriver: true , easing: Easing.linear
+            toValue: 1, duration: 500, useNativeDriver: true, easing: Easing.linear
         }).start()
     }
     _renderSegment = ({ item, index }) => {
@@ -54,7 +54,7 @@ class Menu extends Component {
 
     _renderResturants = ({ item, index }) => {
         return (
-            <TouchableWithoutFeedback onPress={()=> Actions.Details()}>
+            <TouchableWithoutFeedback onPress={() => Actions.Details()}>
                 <Card style={{ ...styles.restCard, paddingVertical: hp(1) }}>
                     <View>
                         <Image style={styles.MenuImageForCard}
@@ -93,7 +93,7 @@ class Menu extends Component {
                     paddingHorizontal: wp(3),
                 }}>
                     <View style={{ width: wp(25) }}>
-                        <Icon name="left" type="AntDesign" />
+                        <Icon name={L('arrow')} type="AntDesign" />
                     </View>
                     <Text style={{ ...styles.boldDarkText, fontSize: wp(5.2) }}>Restaurant name</Text>
 
@@ -117,7 +117,7 @@ class Menu extends Component {
                     <View style={{ ...styles.View90, marginTop: hp(3), marginBottom: hp(2) }}>
 
                         <Animated.FlatList
-                          style={{ transform: [{scaleY : this.state.CardScale } ]}}
+                            style={{ transform: [{ scaleY: this.state.CardScale }] }}
                             data={restsData}
                             renderItem={this._renderResturants}
                             keyExtractor={(item, index) => index.toString()}
