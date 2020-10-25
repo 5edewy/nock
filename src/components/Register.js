@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, Image, ImageBackground, Animated } from 'react-native'
+import { View, Text, Image, ImageBackground, Animated, TouchableWithoutFeedback } from 'react-native'
 import { Button, Container, Content, } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
 import { Actions } from 'react-native-router-flux';
 import { L } from '../Config';
+import { connect } from 'react-redux';
+import { userApi, clearUser } from '../actions';
 
 class Register extends Component {
     state = {
@@ -14,7 +16,7 @@ class Register extends Component {
     }
 
     componentDidMount() {
-
+        this.props.clearUser()
         Animated.stagger(10, [
             Animated.timing(this.state.circScale, {
                 toValue: 1, duration: 600, useNativeDriver: true
@@ -34,6 +36,7 @@ class Register extends Component {
 
                 <ImageBackground style={{ width: wp(100), height: hp(100) }}
                     source={require('./Assets/images/bg.png')}>
+
                     <Content>
                         <View style={styles.regViewI}>
                             <Animated.Image style={{
@@ -62,6 +65,7 @@ class Register extends Component {
                                 <Text style={styles.midWhiteTextForMainButton}>{L('SignUp')}</Text>
                             </Button>
 
+
                             <Button onPress={() => Actions.push('SignIn')}
                                 style={{
                                     ...styles.mainDarkButton, marginTop: hp(2),
@@ -71,7 +75,15 @@ class Register extends Component {
                             </Button>
 
                         </View>
+
+                        <TouchableWithoutFeedback onPress={() => Actions.reset('MainStack')}>
+                            <Text style={{
+                                ...styles.midWhiteTextForMainButton, color: '#1e1e1d',
+                                marginTop: hp(1), alignSelf: 'center',
+                            }}>Skip</Text>
+                        </TouchableWithoutFeedback>
                     </Content>
+
                 </ImageBackground>
 
             </Container>
@@ -79,4 +91,12 @@ class Register extends Component {
     }
 }
 
-export default Register;
+
+const mapStateToProps = ({ auth }) => {
+    const { user, loading } = auth
+
+    return { user, loading };
+};
+
+export default connect(mapStateToProps, { userApi, clearUser })(Register);
+

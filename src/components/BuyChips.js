@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, TouchableWithoutFeedback, Animated, Easing } from 'react-native'
+import { View, Text, Image, TouchableWithoutFeedback, Animated, Easing, Alert } from 'react-native'
 import { Container, Content, Grid, Icon } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
@@ -20,10 +20,12 @@ class BuyChips extends Component {
     }
     componentDidMount() {
         const { user, otherApi } = this.props
-        otherApi('GET', 'getProducts', '', user.access, 'products')
+        otherApi('GET', 'getProducts', '', user ? user.access : '', 'products')
+        // console.log(user);
+        if (user) {
+            otherApi('GET', 'favorite', '', user.access, 'favorite')
+        }
 
-
-        otherApi('GET', 'favorite', '', user.access, 'favorite')
     }
     startAnimate() {
         Animated.timing(this.state.CardScale, {
@@ -31,7 +33,11 @@ class BuyChips extends Component {
         }).start()
     }
     addToCart(item) {
-        const { cart, changeValue } = this.props
+        const { cart, changeValue, user } = this.props
+        if (!user) {
+            Alert.alert(L('loginFirst'))
+            return
+        }
         const newCart = addCart(item, cart)
         changeValue({ cart: newCart })
         this.setState({ updateCart: 1 })
@@ -40,8 +46,8 @@ class BuyChips extends Component {
     _renderChips = ({ item }) => {
         const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
         const { otherApi, user, favorite } = this.props
-        const click = () => otherApi('POST', 'addDeleteFavorite', { product_id: item.id }, user.access, 'favorite')
-        const fav = favorite.filter(ite => ite.id == item.id)
+        const click = () => user ? otherApi('POST', 'addDeleteFavorite', { product_id: item.id }, user.access, 'favorite') : ''
+        const fav = user ? favorite.filter(ite => ite.id == item.id) : false
         return (
             <View style={styles.chipCardI} key={item.id}>
                 <AnimatedFastImage

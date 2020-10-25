@@ -4,7 +4,7 @@ import { Button, Container, Content, Input, Row } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
 import { Actions } from 'react-native-router-flux';
-import { userApi } from '../actions';
+import { userApi, clearUser } from '../actions';
 import { Spinner } from './Assets/common';
 import { connect } from 'react-redux';
 import { L } from '../Config';
@@ -12,6 +12,9 @@ import { L } from '../Config';
 class SignIn extends Component {
     state = {
         rememberMe: false, email: '', password: ''
+    }
+    componentDidMount() {
+        this.props.clearUser()
     }
     onButtonChange() {
 
@@ -118,5 +121,5 @@ const mapStateToProps = ({ auth }) => {
     return { user, loading };
 };
 
-export default connect(mapStateToProps, { userApi })(SignIn);
+export default connect(mapStateToProps, { userApi, clearUser })(SignIn);
 

@@ -65,12 +65,14 @@ export const userApi = (method, api, data, sessiontoken, flag) => {
       userPostSuccess(dispatch, res.data, flag, sessiontoken);
 
     }).catch(function (error) {
+      // console.log(error.response);
       let message
       if (error.response && error.response.status == 400) {
         message = error.response.data.message
         userPostFail(dispatch, error.response.data.message);
       } else if (error.response && error.response.status == 401) {
         message = 'Auth Fail'
+        // clearUser();
         userPostFail(dispatch, 'Auth Fail');
         _logOut()
       } else {
@@ -96,10 +98,17 @@ export const userPostSuccess = (dispatch, data, api, token) => {
   // console.log(data);
 
   let res = { data, api }
+
+  dispatch({
+    type: USER_POST_DATE_SUCCESS,
+    payload: res,
+  });
+
   if (api == "login" || api == "register") {
-    Actions.reset('MainStack')
-    // console.log(data.data);
+
+    // console.log(data.data.user);
     _storeData(data.data.user)
+    Actions.reset('MainStack')
   } else if (api == "edit") {
     const user = { ...data.data.user, access: token }
     res = { data: user, api }
@@ -107,12 +116,6 @@ export const userPostSuccess = (dispatch, data, api, token) => {
   } else if (api == "logout") {
     _logOut()
   }
-  dispatch({
-    type: USER_POST_DATE_SUCCESS,
-    payload: res,
-  });
-
-
 }
 
 

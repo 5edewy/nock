@@ -45,7 +45,7 @@ export const otherApi = (method, api, data, sessiontoken, flag) => {
 
     }).catch(function (error) {
       let message
-
+      // console.log(error.response);
       if (error.response && error.response.status == 400) {
         message = error.response.data.message
         otherFail(dispatch, error.response.data.message);

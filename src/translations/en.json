@@ -74,5 +74,7 @@
     "Scan nock": "Scan nock",
     "Scan to Save": "Scan to Save",
     "scanOpen": "88",
-    "scanOpenStart": "100"
+    "scanOpenStart": "100",
+    "Add Link": "Add Link",
+    "loginFirst": "You have to login"
 }

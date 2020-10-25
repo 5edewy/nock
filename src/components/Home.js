@@ -8,7 +8,7 @@ import styles from './Assets/style/styles';
 import { Actions } from 'react-native-router-flux';
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
 import { joinArrayObjs, convertArrayObjs, buildUrlPayload, byteToString } from '../Config';
-import { userApi, otherApi, changeValue } from '../actions';
+import { userApi, otherApi, changeValue, clearUser } from '../actions';
 import { Spinner } from './Assets/common';
 import { connect } from 'react-redux';
 import { L } from '../Config';
@@ -49,17 +49,29 @@ class Home extends Component {
         nockedTag: false,
         nockedSocail: []
     }
-    componentDidMount() {
-        const { user, userApi } = this.props
-        if (user) {
-            userApi('GET', 'getSocialMedia/' + user.username, '', user.access, 'socail')
-        }
-        // console.log(user);
-        NfcManager.start();
+    async componentDidMount() {
+        try {
+            const val = await AsyncStorage.getItem('user')
+            const user = JSON.parse(val)
+            // console.log(user);
+            if (user) {
 
-        Animated.timing(this.state.scanButton, {
-            toValue: wp(L('scanOpen')), duration: 1000, easing: Easing.ease, useNativeDriver: true
-        }).start()
+                this.props.changeValue({ user })
+                this.getData()
+                NfcManager.start();
+
+                Animated.timing(this.state.scanButton, {
+                    toValue: wp(L('scanOpen')), duration: 1000, easing: Easing.ease, useNativeDriver: true
+                }).start()
+            }
+        } catch (error) {
+
+        }
+
+    }
+    getData() {
+        const { user, userApi } = this.props
+        userApi('GET', 'getSocialMedia/' + user.username, '', user.access, 'socail')
     }
     componentWillUnMount() {
         this.cleanUp();
@@ -231,6 +243,10 @@ class Home extends Component {
     }
     saveSocial() {
         const { userApi, minSocial, user } = this.props
+        if (!user) {
+            Alert.alert(L('loginFirst'))
+            return
+        }
         userApi('POST', 'addSocialMedia', { social: minSocial }, user.access, 'socail')
         this.setState({ modalPage: 1, text: '', selectedLink: null, key: '', addLinkModal: false })
     }
@@ -238,7 +254,7 @@ class Home extends Component {
         // console.log('sdds');
         try {
             await AsyncStorage.removeItem('user');
-            // this.props.clearUser()
+            this.props.clearUser()
             Actions.reset('auth');
         } catch (e) {
             console.log(e);
@@ -271,12 +287,15 @@ class Home extends Component {
                             {/* <Text style={styles.regWhiteText}>43 pops</Text> */}
                         </View>
                     </View>
-                    <TouchableWithoutFeedback onPress={() => Actions.push('Scan', { user })}>
-                        <View>
-                            <Image style={styles.SideMenuIcon}
-                                source={require('./Assets/images/scan.png')} />
-                        </View>
-                    </TouchableWithoutFeedback>
+                    {user ?
+                        <TouchableWithoutFeedback onPress={() => Actions.push('Scan', { user })}>
+                            <View>
+                                <Image style={styles.SideMenuIcon}
+                                    source={require('./Assets/images/scan.png')} />
+                            </View>
+                        </TouchableWithoutFeedback>
+                        : <View />}
+
                 </View>
                 <Content>
 
@@ -309,7 +328,7 @@ class Home extends Component {
                                 <Text style={{
                                     ...styles.lightDarkText,
                                     fontSize: wp(3.1), paddingLeft: wp(1)
-                                }}>Add Link</Text>
+                                }}>{L('Add Link')}</Text>
                             </View>
                         </TouchableWithoutFeedback>
                         <View style={{ marginTop: hp(5) }}>
@@ -396,30 +415,43 @@ class Home extends Component {
                                     source={require('./Assets/images/homei.png')} />
                                 <Text style={styles.regDarlText}>{L('Home')}</Text>
                             </View>
-                            <TouchableWithoutFeedback onPress={() => Actions.push('EditMyProfile')}>
-                                <View style={styles.lineForImageandName}>
-                                    <Icon name="user-edit" type='FontAwesome5' style={{ fontSize: wp(6), marginRight: wp(5) }} />
-                                    <Text style={styles.regDarlText}>{L('My Profile')}</Text>
-                                </View>
-                            </TouchableWithoutFeedback>
-                            <TouchableWithoutFeedback onPress={() => Actions.push('MyAdress')}>
-                                <View style={styles.lineForImageandName}>
-                                    <Icon name="address" type='Entypo' style={{ fontSize: wp(6), marginRight: wp(5) }} />
-                                    <Text style={styles.regDarlText}>{L('My Address')}</Text>
-                                </View>
-                            </TouchableWithoutFeedback>
-                            <TouchableWithoutFeedback onPress={() => Actions.push('MyOrders')}>
-                                <View style={styles.lineForImageandName}>
-                                    <Icon name="shopping-cart" type='FontAwesome' style={{ fontSize: wp(6), marginRight: wp(5) }} />
-                                    <Text style={styles.regDarlText}>{L('My Orders')}</Text>
-                                </View>
-                            </TouchableWithoutFeedback>
-                            <TouchableWithoutFeedback onPress={() => Actions.push('Favorite')}>
-                                <View style={styles.lineForImageandName}>
-                                    <Icon name="favorite" type='Fontisto' style={{ fontSize: wp(6), marginRight: wp(5) }} />
-                                    <Text style={styles.regDarlText}>{L('favorite')}</Text>
-                                </View>
-                            </TouchableWithoutFeedback>
+                            {user ?
+                                <View style={{ alignSelf: 'flex-start', justifyContent: 'flex-end' }}>
+                                    <TouchableWithoutFeedback onPress={() => Actions.push('EditMyProfile')}>
+                                        <View style={styles.lineForImageandName}>
+                                            <Icon name="user-edit" type='FontAwesome5' style={{ fontSize: wp(6), marginRight: wp(5) }} />
+                                            <Text style={styles.regDarlText}>{L('My Profile')}</Text>
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                    <TouchableWithoutFeedback onPress={() => Actions.push('MyAdress')}>
+                                        <View style={styles.lineForImageandName}>
+                                            <Icon name="address" type='Entypo' style={{ fontSize: wp(6), marginRight: wp(5) }} />
+                                            <Text style={styles.regDarlText}>{L('My Address')}</Text>
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                    <TouchableWithoutFeedback onPress={() => Actions.push('MyOrders')}>
+                                        <View style={styles.lineForImageandName}>
+                                            <Icon name="shopping-cart" type='FontAwesome' style={{ fontSize: wp(6), marginRight: wp(5) }} />
+                                            <Text style={styles.regDarlText}>{L('My Orders')}</Text>
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                    <TouchableWithoutFeedback onPress={() => Actions.push('Favorite')}>
+                                        <View style={styles.lineForImageandName}>
+                                            <Icon name="favorite" type='Fontisto' style={{ fontSize: wp(6), marginRight: wp(5) }} />
+                                            <Text style={styles.regDarlText}>{L('favorite')}</Text>
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                </View> :
+
+                                <TouchableWithoutFeedback onPress={() => Actions.reset('auth')}>
+                                    <View style={styles.lineForImageandName}>
+                                        <Icon name="user-o" type='FontAwesome' style={{ fontSize: wp(6), marginRight: wp(5) }} />
+                                        <Text style={styles.regDarlText}>{L('SignUp')}</Text>
+                                    </View>
+                                </TouchableWithoutFeedback>
+
+                            }
+
                             <TouchableWithoutFeedback onPress={() => Actions.reset('language')}>
                                 <View style={styles.lineForImageandName}>
                                     <Icon name="language" type='FontAwesome' style={{ fontSize: wp(6), marginRight: wp(5) }} />
@@ -447,13 +479,14 @@ class Home extends Component {
 
 
                             <View style={{ ...styles.lineGray, marginTop: hp(8) }} />
-                            <TouchableWithoutFeedback onPress={() => this.outLog()}>
-                                <View style={{ ...styles.lineForImageandName, alignSelf: 'center', marginTop: hp(1) }}>
-                                    <Image style={styles.pageIcon}
-                                        source={require('./Assets/images/out.png')} />
-                                    <Text style={styles.regDarlText}>{L('Logout')}</Text>
-                                </View>
-                            </TouchableWithoutFeedback>
+                            {user ?
+                                <TouchableWithoutFeedback onPress={() => this.outLog()}>
+                                    <View style={{ ...styles.lineForImageandName, alignSelf: 'center', marginTop: hp(1) }}>
+                                        <Image style={styles.pageIcon}
+                                            source={require('./Assets/images/out.png')} />
+                                        <Text style={styles.regDarlText}>{L('Logout')}</Text>
+                                    </View>
+                                </TouchableWithoutFeedback> : null}
 
                         </View>
                     </Card>
@@ -464,18 +497,18 @@ class Home extends Component {
 
                     </TouchableWithoutFeedback>
                 </Animated.View>
+                {user ?
+                    <Animated.View style={{ position: 'absolute', top: hp(25), justifyContent: 'center', alignItems: 'center', backgroundColor: '#000', transform: [{ translateX: this.state.scanButton }] }} >
+                        <TouchableWithoutFeedback onPress={this.readData}>
 
-                <Animated.View style={{ position: 'absolute', top: hp(25), justifyContent: 'center', alignItems: 'center', backgroundColor: '#000', transform: [{ translateX: this.state.scanButton }] }} >
-                    <TouchableWithoutFeedback onPress={this.readData}>
 
+                            <View style={{ width: wp(11), height: wp(11), alignSelf: 'center', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderRadius: wp(2) }}>
+                                <Image style={styles.SideMenuIcon}
+                                    source={require('./Assets/images/scan.png')} />
+                            </View>
 
-                        <View style={{ width: wp(11), height: wp(11), alignSelf: 'center', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderRadius: wp(2) }}>
-                            <Image style={styles.SideMenuIcon}
-                                source={require('./Assets/images/scan.png')} />
-                        </View>
-
-                    </TouchableWithoutFeedback>
-                </Animated.View>
+                        </TouchableWithoutFeedback>
+                    </Animated.View> : null}
 
                 <Modal
                     presentationStyle="overFullScreen"
@@ -661,5 +694,5 @@ const mapStateToProps = ({ auth }) => {
     return { user, loading, minSocial, updateNocked, nockedSocailUser, nockedSocail };
 };
 
-export default connect(mapStateToProps, { userApi, otherApi, changeValue })(Home);
+export default connect(mapStateToProps, { userApi, otherApi, changeValue, clearUser })(Home);
 

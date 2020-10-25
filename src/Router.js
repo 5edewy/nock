@@ -64,7 +64,7 @@ class TabIcon extends React.Component {
 const Routercomponent = () => {
 
   return (
-    <Router>
+    <Router uriPrefix={'nockapp.net/ar'}>
       <Stack key="root" >
         <Stack key='intro' component={Intro} hideNavBar />
 
@@ -76,12 +76,12 @@ const Routercomponent = () => {
         <Stack key='language' component={Language} hideNavBar />
 
 
-        <Stack key="MainStack" hideNavBar  >
+        <Stack key="MainStack" path={"/home/:id/"} hideNavBar  >
           {/* <Tabs key="MainFlow" showLabel={false}
             tabBarStyle={styles.tabBarStyles}
             hideNavBar
           > */}
-          <Scene key="Home" component={Home} hideNavBar /*icon={TabIcon}
+          <Scene key="Home" path={"/home/:id/"} component={Home} hideNavBar /*icon={TabIcon}
             iconName={require('./components/Assets/images/homei.png')}
             tabText="Home" *//>
           {/* <Scene key="People" component={SignUp} hideNavBar icon={TabIcon}
