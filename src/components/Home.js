@@ -50,6 +50,10 @@ class Home extends Component {
         nockedSocail: []
     }
     async componentDidMount() {
+        console.log(this.props.id);
+        if (this.props.id) {
+            this.getNockedTag(this.props.id)
+        }
         try {
             const val = await AsyncStorage.getItem('user')
             const user = JSON.parse(val)
@@ -133,7 +137,7 @@ class Home extends Component {
                 text = text + String.fromCharCode(parseInt(bytes[i]));
             }
             if (text) {
-                console.log(text);
+                // console.log(text);
                 this.getNockedTag(text)
                 // console.log(convertArrayObjs(text));
                 // this.setState({ nockedSocail: convertArrayObjs(text), nockedTag: true })

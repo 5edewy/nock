@@ -25,7 +25,7 @@ import Pay from './components/Pay';
 import Order from './components/Order';
 import Language from './components/Language';
 
-
+import crossroads from 'crossroads';
 
 class TabIcon extends React.Component {
   render() {
@@ -64,7 +64,7 @@ class TabIcon extends React.Component {
 const Routercomponent = () => {
 
   return (
-    <Router uriPrefix={'nockapp.net/ar'}>
+    <Router uriPrefix={'nockapp.net'}>
       <Stack key="root" >
         <Stack key='intro' component={Intro} hideNavBar />
 
@@ -76,7 +76,7 @@ const Routercomponent = () => {
         <Stack key='language' component={Language} hideNavBar />
 
 
-        <Stack key="MainStack" path={"/home/:id/"} hideNavBar  >
+        <Stack key="MainStack" hideNavBar  >
           {/* <Tabs key="MainFlow" showLabel={false}
             tabBarStyle={styles.tabBarStyles}
             hideNavBar
@@ -141,4 +141,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center', alignItems: 'center'
   }
 })
-export default Routercomponent;  
+
+
+export default Routercomponent

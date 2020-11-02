@@ -65,7 +65,9 @@ export const userApi = (method, api, data, sessiontoken, flag) => {
       userPostSuccess(dispatch, res.data, flag, sessiontoken);
 
     }).catch(function (error) {
-      // console.log(error.response);
+      console.log(error);
+      console.log(error.config);
+      console.log(error.response);
       let message
       if (error.response && error.response.status == 400) {
         message = error.response.data.message

@@ -9,11 +9,24 @@ import { changeLng } from './Config'
 import Router from './Router';
 import { Actions } from 'react-native-router-flux';
 import { Root, Header } from 'native-base';
+import { Linking } from 'react-native';
 
 
 class App extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.handleOpenURL = this.handleOpenURL.bind(this);
+    }
     state = { lang: false }
     async componentDidMount() {
+        Linking
+            .getInitialURL()
+            .then(url => this.handleOpenURL({ url }))
+            .catch(console.error);
+
+        Linking.addEventListener('url', this.handleOpenURL);
         this.checkLang()
         SplashScreen.hide();
     }
@@ -31,14 +44,23 @@ class App extends Component {
             // console.log(error);
         }
     }
+    componentWillUnmount() {
+        Linking.removeEventListener('url', this.handleOpenURL);
+    }
 
+    handleOpenURL(event) {
+        if (event.url && event.url.indexOf(this.props.scheme + '://') === 0) {
+            console.log(event);
+            // crossroads.parse(event.url.slice(this.props.scheme.length + 3));
+        }
+    }
     render() {
         const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
         return (
             <Root>
                 <Provider store={store}>
                     {(this.state.lang) ? (
-                        <Router />
+                        <Router {...this.props} />
                     ) : null}
                 </Provider>
             </Root>
