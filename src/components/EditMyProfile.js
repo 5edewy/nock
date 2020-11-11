@@ -54,9 +54,7 @@ class EditMyProfile extends Component {
     }
     _renderLoading() {
         const { loading, loadingOthers } = this.props
-        if (loading || loadingOthers) {
-            return <Spinner size='large' />;
-        }
+        return <Spinner size='large' visible={loading || loadingOthers ? true : false} />;
     }
     launchCam() {
         const options = {

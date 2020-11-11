@@ -76,5 +76,7 @@
     "scanOpen": "88",
     "scanOpenStart": "100",
     "Add Link": "Add Link",
-    "loginFirst": "You have to login"
+    "loginFirst": "You have to login",
+    "Activate Nock": "Activate Nock",
+    "restorePassword": "Reset password"
 }

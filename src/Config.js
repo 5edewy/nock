@@ -48,48 +48,8 @@ export function L(key) {
     // let word = I18n.t(key, { locale: 'ar' })
     return word
 }
-export function joinArrayObjs(arr) {
-    var str = '';
-    for (var i = 0, len = arr.length; i < len; i++) {
-        const element = arr[i]
-        let account
-        account = element.account.toString()
 
-        str += element.media_name + ',' + element.account.toString() + ':';
-    }
-    // console.log(str, encrypt(keyEncrypt, str));
-    return str/*encrypt(keyEncrypt, str)*/;
-}
-export function convertArrayObjs(string) {
-    // console.log(string)
-    // string = decrypt(keyEncrypt, string);
-    console.log(string);
-    let arr = [], arr1 = []
-    arr1 = string.split(":")
-    arr1.forEach(element => {
-        if (element) {
-            const item = element.split(",")
-            if (item.length > 1 && item[0] && item[1])
-                arr.push({ media_name: item[0], account: item[1] })
-        }
-    });
 
-    return decrypt(keyEncrypt, arr);
-}
-export function buildUrlPayload(valueToWrite) {
-    return Ndef.encodeMessage([
-        Ndef.uriRecord(valueToWrite),
-    ]);
-}
-export function byteToString(bytes) {
-    if (!Array.isArray(bytes) || !bytes.length) return '';
-
-    let result = '';
-    for (let i = 0; i < bytes.length; i++) {
-        result += String.fromCharCode(bytes[i]);
-    }
-    return result;
-}
 export function addCart(item, cart) {
     const check = cart.filter((product) => product.id == item.id)
     if (check && check.length > 0) {
@@ -121,3 +81,5 @@ export function updateCart(item, cart, oper) {
     }
     return cart
 }
+
+

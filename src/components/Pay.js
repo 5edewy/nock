@@ -42,9 +42,7 @@ class Pay extends Component {
     }
 
     _renderLoading() {
-        if (this.state.loading || this.props.loading) {
-            return (<Spinner size='large' />)
-        }
+        return <Spinner size='large' visible={this.state.loading || this.props.loading ? true : false} />;
     }
     render() {
 

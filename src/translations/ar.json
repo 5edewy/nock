@@ -76,5 +76,7 @@
     "scanOpen": "-88",
     "scanOpenStart": "-100",
     "Add Link": "اضف رابط",
-    "loginFirst": "يجب تسجيل الدخول"
+    "loginFirst": "يجب تسجيل الدخول",
+    "Activate Nock": "فعل Nock",
+    "restorePassword": "استرداد كلمة المرور"
 }

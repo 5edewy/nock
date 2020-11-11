@@ -12,7 +12,6 @@ import { saveUser } from '../actions'
 class Intro extends Component {
 
   async componentDidMount() {
-    // alert('Intro')
     const user = await AsyncStorage.getItem('user')
     const value = JSON.parse(user)
 

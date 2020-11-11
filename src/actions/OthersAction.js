@@ -32,12 +32,13 @@ export const otherApi = (method, api, data, sessiontoken, flag) => {
       data: method == "POST" ? data : '',
       params: method == "GET" ? data : ''
     }).then(function (res) {
-
+      // console.log(res);
       if (flag == "contactUs") {
         Alert.alert(res.data.data.message)
         Actions.pop()
       }
       if (flag == "saveOrder") {
+        Actions.pop()
         Actions.pop()
         Actions.push('pay', { url: res.data.data.payUrl })
       }

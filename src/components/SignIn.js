@@ -35,9 +35,7 @@ class SignIn extends Component {
     }
     _renderLoading() {
         const { loading } = this.props
-        if (loading) {
-            return <Spinner size='large' />;
-        }
+        return <Spinner size='large' visible={loading} />;
     }
     render() {
         const { rememberMe, email, password } = this.state
@@ -77,8 +75,10 @@ class SignIn extends Component {
                                 placeholder={L('password')}
                                 placeholderTextColor="#a2a2a2"
                                 style={styles.inputStyle} />
+                            <TouchableWithoutFeedback onPress={() => Actions.push('Forget')}>
+                                <Text style={styles.lightDarkText}>{L('forget')}</Text>
+                            </TouchableWithoutFeedback>
 
-                            <Text style={styles.lightDarkText}>{L('forget')}</Text>
                         </View>
 
                         <Button style={{ ...styles.mainDarkButton, marginTop: hp(3) }} onPress={() => this.onButtonChange()}>

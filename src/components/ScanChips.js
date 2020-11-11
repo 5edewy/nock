@@ -26,7 +26,7 @@ class ScanChips extends Component {
         NfcManager.cancelTechnologyRequest().catch(() => 0);
     }
 
-    writeData = async () => {
+    _writeData = async () => {
         const { user } = this.props
         if (!user.username) {
             Alert.alert("Nothing to write");
@@ -38,7 +38,7 @@ class ScanChips extends Component {
                 alertMessage: 'Ready to do some custom Mifare cmd!'
             });
 
-            let text = user.username;
+            let text = "nockapp://nockapp.net/home/" + user.username;
             let fullLength = text.length + 7;
             let payloadLength = text.length + 3;
 
@@ -70,30 +70,30 @@ class ScanChips extends Component {
 
             this._cleanUp();
         } catch (ex) {
-            console.log('ex', ex);
+            // console.log('ex', ex);
             // this.setState({
             //     log: ex.toString()
             // })
             this._cleanUp();
         }
     }
-    _writeNdef = async () => {
+    writeData = async () => {
         const { user } = this.props
-        // try {
-        //     await NfcManager.registerTagEvent();
-        // } catch (ex) {
-        //     console.warn('ex', ex);
-        //     NfcManager.unregisterTagEvent().catch(() => 0);
-        // }
+
+        if (!user.username) {
+            Alert.alert("Nothing to write");
+            return;
+        }
         try {
             let resp = await NfcManager.requestTechnology(NfcTech.Ndef, {
+
                 alertMessage: 'Ready to write some NFC tags!'
             });
 
-            console.log(resp);
+            // console.log(resp);
             let ndef = await NfcManager.getNdefMessage();
             // console.log(ndef);
-            let bytes = buildUrlPayload(user.username);
+            let bytes = buildUrlPayload("https://nockapp.net/ar/users/shipProfile/" + user.username);
             await NfcManager.writeNdefMessage(bytes);
             // console.log('successfully write ndef');
             await NfcManager.setAlertMessageIOS('I got your tag!');

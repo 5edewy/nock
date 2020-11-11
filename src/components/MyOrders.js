@@ -30,9 +30,7 @@ class MyOrders extends Component {
     }
     _renderLoading() {
         const { loading } = this.props
-        if (loading) {
-            return <Spinner size='large' />;
-        }
+        return <Spinner size='large' visible={loading} />;
     }
     _Segment = ({ item, index }) => {
         const { segment } = this.state;

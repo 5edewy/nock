@@ -1,3 +1,5 @@
+import { Alert } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import {
   USER_POST_DATE, CHANGE_MESSAGE, USER_POST_DATE_FAIL, USER_POST_DATE_SUCCESS,
   CLEAR_MESSAGE, CLEAR_USER, SAVE_USER, CHANGE_VALUE
@@ -25,8 +27,9 @@ export default (state = INITAL_STATE, action) => {
       switch (action.payload.api) {
         case 'register':
           return { ...state, loading: false, user: data.user }
-        case 'forgetPassword':
-          return { ...state, loading: false, message: data.message, resetSucc: true }
+        case 'forget':
+          Alert.alert(data.message)
+          return { ...state, loading: false, message: data.message }
         case 'login':
           return { ...state, loading: false, user: data.user }
         case 'edit':
@@ -38,7 +41,12 @@ export default (state = INITAL_STATE, action) => {
         case 'socail':
           return { ...state, loading: false, minSocial: data.social, userSocial: data.user }
         case 'nockedSocail':
-          return { ...state, loading: false, nockedSocail: data.social, nockedSocailUser: data.user, updateNocked: true }
+          Actions.pop()
+          Actions.push('Myprofile', { profile: data.social, userProfile: data.user })
+          return { ...state, loading: false, nockedSocail: data.social, nockedSocailUser: data.user, updateNocked: false }
+        case 'nockedPepole':
+          Actions.push('Myprofile', { profile: data.social, userProfile: data.user })
+          return { ...state, loading: false, nockedSocail: data.social, nockedSocailUser: data.user, updateNocked: false }
         case 'logout':
           return { ...INITAL_STATE }
         default:

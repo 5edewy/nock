@@ -27,9 +27,7 @@ class MyCard extends Component {
     }
     _renderLoading() {
         const { loading } = this.props
-        if (loading) {
-            return <Spinner size='large' />;
-        }
+        return <Spinner size='large' visible={loading} />;
     }
     _renderMyorders = ({ item }) => {
         return (
@@ -47,7 +45,7 @@ class MyCard extends Component {
                     </View>
                     <View style={{ marginHorizontal: wp(6) }}>
                         <View style={{ ...styles.row_aliCentre_jusCentre, width: wp(55) }}>
-                            <Text style={styles.semiBoldDarkText}>{item.title}</Text>
+                            <Text style={[styles.semiBoldDarkText, { width: wp(50) }]} numberOfLines={1}>{item.title}</Text>
                             <TouchableWithoutFeedback onPress={() => this.pendToCart(item, 'remove')}>
                                 <Icon name="cross" type="Entypo" style={{ color: '#b3b3b3' }} />
                             </TouchableWithoutFeedback>
@@ -80,14 +78,14 @@ class MyCard extends Component {
     }
     onButtonChange() {
         const { cart, user, otherApi } = this.props;
-        const { address_id } = this.state;
-        const data = { address_id, cart, pay: 2 }
-        if (!address_id) {
-            Alert.alert(L('selectAddress'))
-            return
-        }
-
-        otherApi('POST', 'saveOrder', data, user.access, 'saveOrder')
+        // const { address_id } = this.state;
+        const data = { cart, pay: 2 }
+        // if (!address_id) {
+        //     Alert.alert(L('selectAddress'))
+        //     return
+        // }
+        Actions.push('MyAdress', { order: data })
+        // otherApi('POST', 'saveOrder', data, user.access, 'saveOrder')
 
 
     }
@@ -122,7 +120,7 @@ class MyCard extends Component {
                     </View>
                     {settings && cart.length > 0 ?
                         <View style={styles.View90}>
-                            <Item style={{ ...styles.row_aliCentre_jusCentre, paddingVertical: hp(2), marginTop: hp(1) }}>
+                            {/* <Item style={{ ...styles.row_aliCentre_jusCentre, paddingVertical: hp(2), marginTop: hp(1) }}>
                                 <View style={styles.inputWithLabelForget}>
                                     <Picker
                                         placeholder={L('My Address')}
@@ -144,7 +142,7 @@ class MyCard extends Component {
 
                                     </Picker>
                                 </View>
-                            </Item>
+                            </Item> */}
                             <Item style={{ ...styles.row_aliCentre_jusCentre, paddingVertical: hp(2), marginTop: hp(1) }}>
                                 <Text style={styles.regDarlText}>{L('Tax')}</Text>
                                 <View style={{ ...styles.row_aliCentre }}>

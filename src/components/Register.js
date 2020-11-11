@@ -76,12 +76,12 @@ class Register extends Component {
 
                         </View>
 
-                        <TouchableWithoutFeedback onPress={() => Actions.reset('MainStack')}>
+                        {/* <TouchableWithoutFeedback onPress={() => Actions.reset('MainStack')}>
                             <Text style={{
                                 ...styles.midWhiteTextForMainButton, color: '#1e1e1d',
                                 marginTop: hp(1), alignSelf: 'center',
                             }}>Skip</Text>
-                        </TouchableWithoutFeedback>
+                        </TouchableWithoutFeedback> */}
                     </Content>
 
                 </ImageBackground>

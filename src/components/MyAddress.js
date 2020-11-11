@@ -16,14 +16,20 @@ class MyAddress extends Component {
         userApi('GET', 'myAddress', '', user.access, 'address')
     }
     _renderLoading() {
-        const { loading } = this.props
-        if (loading) {
-            return <Spinner size='large' />;
+        const { loading, loadingOthers } = this.props
+        return <Spinner size='large' visible={loading || loadingOthers ? true : false} />;
+    }
+    endOrder(address_id) {
+        const { user, order, otherApi } = this.props;
+
+        if (order) {
+            const data = { address_id, ...order }
+            // console.log(data);
+            otherApi('POST', 'saveOrder', data, user.access, 'saveOrder')
         }
     }
-
     render() {
-        const { address, userApi, user } = this.props
+        const { address, userApi, user, order } = this.props
         return (
             <Container>
                 <View style={[styles.header, { justifyContent: 'space-between' }]}>
@@ -38,27 +44,29 @@ class MyAddress extends Component {
                 <Content>
                     <View style={{ ...styles.View90, marginTop: hp(6) }} >
                         {address.map((item) => (
-                            <Card style={styles.CardAddress} key={item.id}>
-                                <Text style={{ ...styles.regDarlText, color: '#848484' }}>
-                                    {item.district + '-' + item.street + '-' + item.city.name + '/' + item.country.name}
-                                </Text>
-                                <View style={{ ...styles.row_aliCentre, marginTop: hp(2) }}>
-                                    <TouchableWithoutFeedback
-                                        onPress={() => userApi('GET', 'deleteAddress/' + item.id, '', user.access, 'address')}
-                                    >
-                                        <View style={styles.smallcheckbos}>
-                                            <Icon name="delete" type='AntDesign' style={{ fontSize: wp(4.3) }} />
-                                        </View>
-                                    </TouchableWithoutFeedback>
-                                    <TouchableWithoutFeedback onPress={() => Actions.AddAddress({ item })}>
-                                        <View style={styles.smallcheckbos}>
-                                            <Icon name="edit" type="AntDesign" style={{ fontSize: wp(4.3) }} />
-                                        </View>
-                                    </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback key={item.id} onPress={() => this.endOrder(item.id)}>
+                                <Card style={styles.CardAddress}>
+                                    <Text style={{ ...styles.regDarlText, color: '#848484' }}>
+                                        {item.district + '-' + item.street + '-' + item.city.name + '/' + item.country.name}
+                                    </Text>
+                                    {!order ?
+                                        <View style={{ ...styles.row_aliCentre, marginTop: hp(2) }}>
+                                            <TouchableWithoutFeedback
+                                                onPress={() => userApi('GET', 'deleteAddress/' + item.id, '', user.access, 'address')}
+                                            >
+                                                <View style={styles.smallcheckbos}>
+                                                    <Icon name="delete" type='AntDesign' style={{ fontSize: wp(4.3) }} />
+                                                </View>
+                                            </TouchableWithoutFeedback>
+                                            <TouchableWithoutFeedback onPress={() => Actions.AddAddress({ item })}>
+                                                <View style={styles.smallcheckbos}>
+                                                    <Icon name="edit" type="AntDesign" style={{ fontSize: wp(4.3) }} />
+                                                </View>
+                                            </TouchableWithoutFeedback>
+                                        </View> : null}
+                                </Card>
+                            </TouchableWithoutFeedback>
 
-
-                                </View>
-                            </Card>
                         )
                         )}
 
@@ -77,11 +85,11 @@ class MyAddress extends Component {
 }
 
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, others }) => {
     const { user, loading, address } = auth
-
-    return { user, loading, address };
+    const loadingOthers = others.loading
+    return { user, loading, address, loadingOthers };
 };
 
-export default connect(mapStateToProps, { userApi })(MyAddress);
+export default connect(mapStateToProps, { userApi, otherApi })(MyAddress);
 

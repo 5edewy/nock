@@ -93,11 +93,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: wp(2)
     },
     socialImage: {
-        width: wp(18), height: hp(10), resizeMode: 'contain'
+        resizeMode: 'contain', width: wp(15), height: hp(6)
     },
     viewForSocialImage: {
         flexDirection: 'row', /*width: wp(62),*/flexWrap: 'wrap',
-        /*justifyContent: 'space-around', */marginTop: hp(3)
+        /*justifyContent: 'space-around', */marginTop: hp(1)
     },
     addLinkView: {
         width: wp(30), height: hp(5), borderRadius: wp(5), backgroundColor: '#f1f1f1',

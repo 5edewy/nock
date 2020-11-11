@@ -26,6 +26,8 @@ import Order from './components/Order';
 import Language from './components/Language';
 
 import crossroads from 'crossroads';
+import Forget from './components/Forget';
+import TabbarForTwo from './components/TabbarForTwo';
 
 class TabIcon extends React.Component {
   render() {
@@ -72,23 +74,28 @@ const Routercomponent = () => {
           <Scene key="Reg" component={Register} hideNavBar />
           <Scene key="SignUp" component={SignUp} hideNavBar />
           <Scene key="SignIn" component={SignIn} hideNavBar />
+          <Scene key="Forget" component={Forget} hideNavBar />
         </Stack>
         <Stack key='language' component={Language} hideNavBar />
 
 
-        <Stack key="MainStack" hideNavBar  >
-          {/* <Tabs key="MainFlow" showLabel={false}
+        <Stack key="MainStack" path={"/ar/users/shipProfile/:id/"} hideNavBar  >
+          {/* <Scene tabs key="MainFlow" showLabel={false}
             tabBarStyle={styles.tabBarStyles}
+            path={"/ar/users/shipProfile/:id/"}
             hideNavBar
           > */}
-          <Scene key="Home" path={"/home/:id/"} component={Home} hideNavBar /*icon={TabIcon}
+          <Scene key="Home" path={"/ar/users/shipProfile/:id/"} component={TabbarForTwo} hideNavBar /*icon={TabIcon}
             iconName={require('./components/Assets/images/homei.png')}
-            tabText="Home" *//>
+            tabText="Home" initial*/ />
+          {/* <Scene key="Home" path={"/ar/users/shipProfile/:id/"} component={Home} hideNavBar icon={TabIcon}
+            iconName={require('./components/Assets/images/homei.png')}
+            tabText="Home" initial /> */}
           {/* <Scene key="People" component={SignUp} hideNavBar icon={TabIcon}
-              iconName={require('./components/Assets/images/pep.png')}
-              tabText="People" initial /> */}
+            iconName={require('./components/Assets/images/pep.png')}
+            tabText="People" /> */}
 
-          {/* </Tabs> */}
+          {/* </Scene> */}
 
 
 

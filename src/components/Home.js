@@ -1,38 +1,85 @@
 import React, { Component } from 'react';
 import {
-    View, Text, Image, TouchableWithoutFeedback, Animated, Alert, Easing, FlatList, Modal, TextInput, Platform, Linking
+    View, Text, Image, TouchableWithoutFeedback, Animated, Alert, Easing, FlatList, Modal, KeyboardAvoidingView, Platform, Linking
 } from 'react-native'
-import { Button, Card, Container, Content, Icon, Input, Row } from 'native-base';
+import { Button, Card, Container, Content, Icon, Input, Row, Thumbnail } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
 import { Actions } from 'react-native-router-flux';
-import NfcManager, { NfcTech } from 'react-native-nfc-manager';
-import { joinArrayObjs, convertArrayObjs, buildUrlPayload, byteToString } from '../Config';
+
 import { userApi, otherApi, changeValue, clearUser } from '../actions';
 import { Spinner } from './Assets/common';
 import { connect } from 'react-redux';
 import { L } from '../Config';
 import AsyncStorage from '@react-native-community/async-storage';
+import NfcManager, { Ndef, NfcTech } from 'react-native-nfc-manager';
 
 const linkData = [
-    { name: 'Snap chat', key: 'snap', image: require('./Assets/images/Snapchat.png') },
-
-    { name: 'contact', key: 'contact', image: require('./Assets/images/contact.png') },
-    { name: 'WhatsApp', key: 'wechat', image: require('./Assets/images/wechat.png') },
-    { name: 'textme', key: 'textme', image: require('./Assets/images/text.png') },
-    { name: 'google', key: 'google', image: require('./Assets/images/googlr.png') },
-
-    { name: 'Linkedin', key: 'Linkedin', image: require('./Assets/images/Linkedin.png') },
-    { name: 'tik-tok', key: 'tik-tok', image: require('./Assets/images/tik-tok.png') },
-    { name: 'Sound Cloud', key: 'sound', image: require('./Assets/images/sound.png') },
-    { name: 'E-mail', key: 'mail', image: require('./Assets/images/email.png') },
-    { name: 'Youtube', key: 'Youtube', image: require('./Assets/images/Youtube.png') },
-    { name: 'Facebook', key: 'face', image: require('./Assets/images/facebook.png') },
-    { name: 'Twitter', key: 'twit', image: require('./Assets/images/twiiter.png') },
-    { name: 'Instagram', key: 'insta', image: require('./Assets/images/insta.png') },
-
-
+    { name: 'textme', key: 'textme', image: require('./Assets/images/text.png'), link: 'sms:', pattern: '' },
+    { name: 'contact', key: 'contact', image: require('./Assets/images/contact.png'), link: 'tel:', pattern: '' },
+    { name: 'E-mail', key: 'mail', image: require('./Assets/images/email.png'), link: 'mailto:', pattern: '' },
+    {
+        name: 'WhatsApp', key: 'wechat', image: require('./Assets/images/wechat.png'),
+        link: 'https://wa.me/', pattern: ''
+    },
+    {
+        name: 'Location', key: 'Location', image: require('./Assets/images/Location.png'),
+        link: 'https://', pattern: 'https://'
+    },
+    {
+        name: 'Facebook', key: 'face', image: require('./Assets/images/facebook.png'),
+        link: 'https://facebook.com/', pattern: '.com/'
+    },
+    {
+        name: 'Linkedin', key: 'Linkedin', image: require('./Assets/images/Linkedin.png'),
+        link: 'https://linkedin.com/in/', pattern: 'in/'
+    },
+    {
+        name: 'Instagram', key: 'insta', image: require('./Assets/images/insta.png'),
+        link: 'https://instagram.com/', pattern: '.com/'
+    },
+    {
+        name: 'Snap chat', key: 'snap', image: require('./Assets/images/Snapchat.png'),
+        link: 'https://snapchat.com/add/', pattern: 'add/'
+    },
+    {
+        name: 'Twitter', key: 'twit', image: require('./Assets/images/twiiter.png'),
+        link: 'https://twitter.com/', pattern: '.com/'
+    },
+    {
+        name: 'Youtube', key: 'Youtube', image: require('./Assets/images/Youtube.png'),
+        link: 'https://www.youtube.com/channel/', pattern: 'channel/'
+    },
+    {
+        name: 'Sound Cloud', key: 'sound', image: require('./Assets/images/sound.png'),
+        link: 'https://soundcloud.com/', pattern: '.com/'
+    },
+    {
+        name: 'tik-tok', key: 'tik-tok', image: require('./Assets/images/tik-tok.png'),
+        link: 'https://vm.tiktok.com/', pattern: '.com/'
+    },
+    {
+        name: 'Othet link', key: 'otherlink', image: require('./Assets/images/otherlink.png'),
+        link: 'https://', pattern: 'https://'
+    },
+    {
+        name: 'Website', key: 'Website', image: require('./Assets/images/website.png'),
+        link: 'https://', pattern: 'https://'
+    },
+    {
+        name: 'Resume', key: 'Resume', image: require('./Assets/images/Resume.png'),
+        link: 'https://', pattern: 'https://'
+    },
+    {
+        name: 'Menu', key: 'Menu', image: require('./Assets/images/menu_f.png'),
+        link: 'https://', pattern: 'https://'
+    },
 ]
+function buildUrlPayload(valueToWrite) {
+    return Ndef.encodeMessage([
+        Ndef.uriRecord(valueToWrite),
+    ]);
+}
 class Home extends Component {
 
     state = {
@@ -50,10 +97,9 @@ class Home extends Component {
         nockedSocail: []
     }
     async componentDidMount() {
-        console.log(this.props.id);
-        if (this.props.id) {
-            this.getNockedTag(this.props.id)
-        }
+
+
+        NfcManager.start();
         try {
             const val = await AsyncStorage.getItem('user')
             const user = JSON.parse(val)
@@ -62,7 +108,7 @@ class Home extends Component {
 
                 this.props.changeValue({ user })
                 this.getData()
-                NfcManager.start();
+
 
                 Animated.timing(this.state.scanButton, {
                     toValue: wp(L('scanOpen')), duration: 1000, easing: Easing.ease, useNativeDriver: true
@@ -77,12 +123,7 @@ class Home extends Component {
         const { user, userApi } = this.props
         userApi('GET', 'getSocialMedia/' + user.username, '', user.access, 'socail')
     }
-    componentWillUnMount() {
-        this.cleanUp();
-    }
-    cleanUp = () => {
-        NfcManager.cancelTechnologyRequest().catch(() => 0);
-    }
+
     onChangeText = (text) => {
         this.setState({
             text
@@ -92,8 +133,18 @@ class Home extends Component {
         let { text, key } = this.state
         let { minSocial, changeValue } = this.props
         this.removeSocail(key, true)
+
+
         if (text) {
-            // console.log(typeof (text), typeof (text) == "number");
+            const object = this.filterObject(key)
+            if (object && object.pattern != '') {
+                const urlArr = text.split(object.pattern)
+                if (urlArr && urlArr.length > 1) {
+                    text = urlArr[1]
+                } else {
+                    text = urlArr[0]
+                }
+            }
             if (typeof (text) == 'number') {
                 text = text.toString()
             }
@@ -109,61 +160,51 @@ class Home extends Component {
 
     }
 
+    writeData = async () => {
+        const { user } = this.props
 
-    readData = async () => {
+        if (!user.username) {
+            Alert.alert("Nothing to write");
+            return;
+        }
         try {
-            let tech = Platform.OS === 'ios' ? NfcTech.MifareIOS : NfcTech.NfcA;
-            let resp = await NfcManager.requestTechnology(tech, {
-                alertMessage: "Ready for magic"
+            let resp = await NfcManager.requestTechnology(NfcTech.Ndef, {
+
+                alertMessage: 'Ready to write some NFC tags!'
             });
-            let cmd = Platform.OS === 'ios' ? NfcManager.sendMifareCommandIOS : NfcManager.transceive;
+
             // console.log(resp);
-            resp = await cmd([0x3A, 4, 4])
-            let payloadLength = parseInt(resp.toString().split(",")[1]);
-            let payloadPages = Math.ceil(payloadLength / 4);
-            let startPage = 5;
-            let endPage = startPage + payloadPages - 1;
-            resp = await cmd([0x3A, startPage, endPage]);
-            // console.log('resp', resp);
-            let bytes = resp.toString().split(",");
-            let text = ""
-            for (let i = 0; i < bytes.length; i++) {
-                if (i < 5) {
-                    continue;
-                }
-                if (parseInt(bytes[i]) === 254) {
-                    break;
-                }
-                text = text + String.fromCharCode(parseInt(bytes[i]));
-            }
-            if (text) {
-                // console.log(text);
-                this.getNockedTag(text)
-                // console.log(convertArrayObjs(text));
-                // this.setState({ nockedSocail: convertArrayObjs(text), nockedTag: true })
-            }
-
-            // console.log(convertArrayObjs(JSON.parse(text)));
-
-            this.cleanUp();
-        } catch (error) {
-            console.log(error.toString());
-            this.cleanUp();
-        }
-
-
-    }
-    getNockedTag(username) {
-        const { user, userApi } = this.props
-        userApi('GET', 'getSocialMedia/' + username, '', user.access, 'nockedSocail')
-    }
-    componentDidUpdate() {
-        const { nockedSocail, updateNocked, changeValue } = this.props
-        if (nockedSocail && updateNocked) {
-            changeValue({ updateNocked: false })
-            this.setState({ nockedTag: true })
+            let ndef = await NfcManager.getNdefMessage();
+            // console.log(ndef);
+            let bytes = buildUrlPayload("https://nockapp.net/ar/users/shipProfile/" + user.username);
+            await NfcManager.writeNdefMessage(bytes);
+            // console.log('successfully write ndef');
+            await NfcManager.setAlertMessageIOS('Your Ship Is Ready To Use');
+            Actions.pop()
+            this._cleanUp();
+        } catch (ex) {
+            await NfcManager.setAlertMessageIOS(ex.toString());
+            // console.log('ex', ex);
+            this._cleanUp();
         }
     }
+    componentWillUnmount() {
+        this._cleanUp();
+    }
+
+    _cleanUp = () => {
+        NfcManager.cancelTechnologyRequest().catch(() => 0);
+    }
+
+    // componentDidUpdate() {
+    //     const { nockedSocail, updateNocked, changeValue, nockedSocailUser } = this.props
+    //     if (nockedSocail && updateNocked) {
+
+    //         Actions.push('Myprofile', { profile: nockedSocail, userProfile: nockedSocailUser })
+    //         changeValue({ updateNocked: false, nockedSocail: null, userProfile: null })
+    //         // this.setState({ nockedTag: true })
+    //     }
+    // }
     _sidemenuOn() {
         Animated.timing(this.state.openSideMenu, {
             toValue: L("sidemenuTovalue"), duration: 500, useNativeDriver: true, easing: Easing.ease
@@ -185,8 +226,8 @@ class Home extends Component {
                 modalPage: 2
             })}>
                 <View style={{ marginVertical: hp(2), marginHorizontal: wp(4) }}>
-                    <Image style={{ width: wp(15), height: hp(7), resizeMode: 'contain' }}
-                        source={item.image} />
+                    {/* <Thumbnail source={item.image} /> */}
+                    <Image source={item.image} style={styles.socialImage} />
                 </View>
             </TouchableWithoutFeedback>
         )
@@ -205,14 +246,18 @@ class Home extends Component {
         }
     }
     handelOpenUrl(url, type) {
-        if (type == 'mail') {
-            Linking.openURL("mailto:" + url)
-        } else if (type == 'textme') {
-            Linking.openURL("sms:" + url)
-        } else if (type == 'contact') {
-            Linking.openURL("tel:" + url)
-        } else {
-            Linking.openURL("https://" + url)
+        const object = this.filterObject(type)
+        if (object && object.link) {
+            let link = object.link + url
+            if (object.pattern != '') {
+                const urlArr = url.split(object.pattern)
+                if (urlArr && urlArr.length > 1) {
+                    link = object.link + urlArr[1]
+                }
+                // console.log(link, url, object, urlArr);
+            }
+
+            Linking.openURL(link)
         }
 
     }
@@ -241,9 +286,9 @@ class Home extends Component {
     }
     _renderLoading() {
         const { loading, loadingOthers } = this.props
-        if (loading || loadingOthers) {
-            return <Spinner size='large' />;
-        }
+
+        return <Spinner size='large' visible={loading || loadingOthers ? true : false} />;
+
     }
     saveSocial() {
         const { userApi, minSocial, user } = this.props
@@ -288,11 +333,11 @@ class Home extends Component {
                             } />
                         <View style={{ marginHorizontal: wp(2) }}>
                             <Text style={styles.regWhiteText} >{user && user.name}</Text>
-                            {/* <Text style={styles.regWhiteText}>43 pops</Text> */}
+                            <Text style={styles.regWhiteText}>{user && user.nock_count} Nock</Text>
                         </View>
                     </View>
                     {user ?
-                        <TouchableWithoutFeedback onPress={() => Actions.push('Scan', { user })}>
+                        <TouchableWithoutFeedback onPress={this.writeData/*Actions.push('Scan', { user })*/}>
                             <View>
                                 <Image style={styles.SideMenuIcon}
                                     source={require('./Assets/images/scan.png')} />
@@ -314,10 +359,10 @@ class Home extends Component {
                                 const social = this.filterObject(item.media_name, 'socail')
                                 if (social) {
                                     return (
-                                        <TouchableWithoutFeedback key={index} onPress={() => this.handelOpenUrl(item.account, item.media_name == 'mail' ? 'mail' : 'socail')}>
-                                            <View style={{ marginVertical: hp(2), marginHorizontal: wp(4) }}>
-                                                <Image style={{ width: wp(15), height: hp(7), resizeMode: 'contain' }}
-                                                    source={social.image} />
+                                        <TouchableWithoutFeedback key={index} onPress={() => this.handelOpenUrl(item.account, item.media_name == 'mail' ? 'mail' : item.media_name)}>
+                                            <View style={{ marginVertical: hp(1), marginHorizontal: wp(1) }}>
+                                                <Image source={social.image} style={styles.socialImage} />
+                                                {/* <Thumbnail source={social.image} /> */}
                                             </View>
                                         </TouchableWithoutFeedback>
                                     )
@@ -335,7 +380,7 @@ class Home extends Component {
                                 }}>{L('Add Link')}</Text>
                             </View>
                         </TouchableWithoutFeedback>
-                        <View style={{ marginTop: hp(5) }}>
+                        <View style={{ marginTop: hp(2) }}>
                             <Text style={styles.boldDarkText} >{L('Text me')}</Text>
                             <View style={styles.viewForSocialImage}>
                                 {minSocial.map((item, index) => {
@@ -343,9 +388,9 @@ class Home extends Component {
                                     if (social) {
                                         return (
                                             <TouchableWithoutFeedback key={index} onPress={() => this.handelOpenUrl(item.account, "textme")}>
-                                                <View style={{ marginVertical: hp(2), marginHorizontal: wp(4) }}>
-                                                    <Image style={{ width: wp(15), height: hp(7), resizeMode: 'contain' }}
-                                                        source={social.image} />
+                                                <View style={{ marginVertical: hp(1), marginHorizontal: wp(1) }}>
+                                                    {/* <Thumbnail source={social.image} /> */}
+                                                    <Image source={social.image} style={styles.socialImage} />
                                                 </View>
                                             </TouchableWithoutFeedback>
                                         )
@@ -356,7 +401,7 @@ class Home extends Component {
 
                         </View>
 
-                        <View style={{ marginTop: hp(5) }}>
+                        <View style={{ marginTop: hp(2) }}>
                             <Text style={styles.boldDarkText} >{L('My Contacts')}</Text>
                             <View style={styles.viewForSocialImage}>
                                 {minSocial.map((item, index) => {
@@ -364,9 +409,9 @@ class Home extends Component {
                                     if (social) {
                                         return (
                                             <TouchableWithoutFeedback key={index} onPress={() => this.handelOpenUrl(item.account, 'contact')}>
-                                                <View style={{ marginVertical: hp(2), marginHorizontal: wp(4) }}>
-                                                    <Image style={{ width: wp(15), height: hp(7), resizeMode: 'contain' }}
-                                                        source={social.image} />
+                                                <View style={{ marginVertical: hp(1), marginHorizontal: wp(1) }}>
+                                                    <Image source={social.image} style={styles.socialImage} />
+                                                    {/* <Thumbnail source={social.image} /> */}
                                                 </View>
                                             </TouchableWithoutFeedback>
                                         )
@@ -421,6 +466,12 @@ class Home extends Component {
                             </View>
                             {user ?
                                 <View style={{ alignSelf: 'flex-start', justifyContent: 'flex-end' }}>
+                                    <TouchableWithoutFeedback onPress={this.writeData/*() => Actions.push('Scan', { user })*/}>
+                                        <View style={styles.lineForImageandName}>
+                                            <Icon name="qrcode" type='FontAwesome5' style={{ fontSize: wp(6), marginRight: wp(5) }} />
+                                            <Text style={styles.regDarlText}>{L('Activate Nock')}</Text>
+                                        </View>
+                                    </TouchableWithoutFeedback>
                                     <TouchableWithoutFeedback onPress={() => Actions.push('EditMyProfile')}>
                                         <View style={styles.lineForImageandName}>
                                             <Icon name="user-edit" type='FontAwesome5' style={{ fontSize: wp(6), marginRight: wp(5) }} />
@@ -441,7 +492,7 @@ class Home extends Component {
                                     </TouchableWithoutFeedback>
                                     <TouchableWithoutFeedback onPress={() => Actions.push('Favorite')}>
                                         <View style={styles.lineForImageandName}>
-                                            <Icon name="favorite" type='Fontisto' style={{ fontSize: wp(6), marginRight: wp(5) }} />
+                                            <Icon name="bookmark" type='FontAwesome5' style={{ fontSize: wp(6), marginRight: wp(5) }} />
                                             <Text style={styles.regDarlText}>{L('favorite')}</Text>
                                         </View>
                                     </TouchableWithoutFeedback>
@@ -501,7 +552,7 @@ class Home extends Component {
 
                     </TouchableWithoutFeedback>
                 </Animated.View>
-                {user ?
+                {/*user ?
                     <Animated.View style={{ position: 'absolute', top: hp(25), justifyContent: 'center', alignItems: 'center', backgroundColor: '#000', transform: [{ translateX: this.state.scanButton }] }} >
                         <TouchableWithoutFeedback onPress={this.readData}>
 
@@ -512,8 +563,7 @@ class Home extends Component {
                             </View>
 
                         </TouchableWithoutFeedback>
-                    </Animated.View> : null}
-
+                </Animated.View> : null*/}
                 <Modal
                     presentationStyle="overFullScreen"
                     animationType="slide"
@@ -530,163 +580,87 @@ class Home extends Component {
                         })}>
                             <View style={{ height: hp(40) }}></View>
                         </TouchableWithoutFeedback>
-                        <View style={styles.modalViewII}>
-                            {this.state.modalPage == 2 ?
-                                <View>
-                                    <Text style={{
-                                        ...styles.boldDarkText, marginLeft: wp(5),
-                                        marginVertical: hp(2)
-                                    }}>{L('Enter your')} {this.state.selectedLink} {L('link')}</Text>
+                        <KeyboardAvoidingView behavior='padding' >
 
-                                    <View style={styles.modalViewIII}>
-                                        <Image style={styles.imageiconSelect}
-                                            source={this.state.selectedLinkImage} />
-                                        <Input
-                                            style={{
-                                                width: wp(70), marginLeft: wp(1), ...styles.lightDarkText
-                                            }}
-                                            value={this.filterSocail(key) ? this.filterSocail(key).account : text}
-                                            editable={this.filterSocail(key) && this.filterSocail(key).account ? false : true}
-                                            onChangeText={this.onChangeText}
-                                            placeholder={this.state.selectedLink + " link..."}
-                                            placeholderTextColor="#adb0b4" />
-                                    </View>
-                                    {this.filterSocail(key) && this.filterSocail(key).account ?
-                                        <View style={{ ...styles.rowAlignsentre, width: wp(84), alignSelf: 'center', marginTop: hp(3) }}>
-                                            <TouchableWithoutFeedback onPress={() => this.handelOpenUrl(this.filterSocail(key).account, key)}>
-                                                <View style={{ ...styles.rowAlignsentre }}>
-                                                    <Image style={styles.icondelete}
-                                                        source={require('./Assets/images/link.png')} />
-                                                    <Text style={{ ...styles.regDarlText }}>{L('Open Link')}</Text>
-                                                </View>
-                                            </TouchableWithoutFeedback>
-                                            <TouchableWithoutFeedback onPress={() => this.removeSocail(key)}>
-                                                <View style={{
-                                                    ...styles.rowAlignsentre, marginLeft: wp(6),
-                                                }} >
-                                                    <Image style={styles.icondelete}
-                                                        source={require('./Assets/images/delete.png')} />
-                                                    <Text style={{ ...styles.regDarlText, color: '#e44040' }}>{L('Delete')}</Text>
-                                                </View>
-                                            </TouchableWithoutFeedback>
+
+                            <View style={styles.modalViewII}>
+                                {this.state.modalPage == 2 ?
+                                    <View>
+                                        <Text style={{
+                                            ...styles.boldDarkText, marginLeft: wp(5),
+                                            marginVertical: hp(2)
+                                        }}>{L('Enter your')} {this.state.selectedLink} {L('link')}</Text>
+
+                                        <View style={styles.modalViewIII}>
+                                            {/* <Thumbnail source={this.state.selectedLinkImage} /> */}
+                                            <Image source={this.state.selectedLinkImage} style={styles.socialImage} />
+                                            <Input
+                                                style={{
+                                                    width: wp(70), marginLeft: wp(1), ...styles.lightDarkText
+                                                }}
+                                                value={this.filterSocail(key) ? this.filterSocail(key).account : text}
+                                                editable={this.filterSocail(key) && this.filterSocail(key).account ? false : true}
+                                                onChangeText={this.onChangeText}
+                                                placeholder={this.state.selectedLink + " link..."}
+                                                placeholderTextColor="#adb0b4" />
                                         </View>
-                                        : null}
-                                    <Button style={{ ...styles.mainDarkButton, marginTop: hp(15), marginBottom: hp(3) }} onPress={() => this.saveSocial2()}>
-                                        <Text style={styles.midWhiteTextForMainButton}>{L('Save Link')}</Text>
-                                    </Button>
-
-
-                                </View>
-                                : this.state.modalPage == 1 ? <View>
-                                    <Text style={{
-                                        ...styles.boldDarkText, marginLeft: wp(5),
-                                        marginVertical: hp(2)
-                                    }}>{L('Choose a social link to add')}</Text>
-
-
-
-
-                                    <FlatList
-                                        style={{ alignSelf: 'center' }}
-                                        data={linkData}
-                                        numColumns={4}
-                                        renderItem={this._renderSocialMedia}
-                                        keyExtractor={(item, index) => index.toString()}
-                                    />
-                                    <Button style={{ ...styles.mainDarkButton, marginTop: hp(15), marginBottom: hp(3) }} onPress={() => this.saveSocial()}>
-                                        <Text style={styles.midWhiteTextForMainButton}>{L('Save Link')}</Text>
-                                    </Button>
-                                </View> : null}
-
-
-                        </View>
-
-                    </View>
-                </Modal>
-                <Modal
-                    presentationStyle="overFullScreen"
-                    animationType="slide"
-                    transparent={true}
-                    visible={nockedTag}
-                // onRequestClose={() => {
-                //     Alert.alert("Modal has been closed.");
-                // }}
-                >
-                    <View style={styles.modalViewI}>
-                        <TouchableWithoutFeedback onPress={() => this.setState({ nockedTag: false })}>
-                            <View style={{ height: hp(40) }}></View>
-                        </TouchableWithoutFeedback>
-                        <View style={styles.modalViewII}>
-                            <View style={styles.View90}>
-
-
-
-                                <Text style={styles.boldDarkText} ></Text>
-
-                                <View style={styles.viewForSocialImage}>
-                                    {nockedSocail.map((item, index) => {
-                                        const social = this.filterObject(item.media_name, 'socail')
-                                        if (social) {
-                                            return (
-                                                <TouchableWithoutFeedback key={index} onPress={() => this.handelOpenUrl(item.account, 'socail')}>
-                                                    <View style={{ marginVertical: hp(2), marginHorizontal: wp(4) }}>
-                                                        <Image style={{ width: wp(15), height: hp(7), resizeMode: 'contain' }}
-                                                            source={social.image} />
+                                        {this.filterSocail(key) && this.filterSocail(key).account ?
+                                            <View style={{ ...styles.rowAlignsentre, width: wp(84), alignSelf: 'center', marginTop: hp(3) }}>
+                                                <TouchableWithoutFeedback onPress={() => this.handelOpenUrl(this.filterSocail(key).account, key)}>
+                                                    <View style={{ ...styles.rowAlignsentre }}>
+                                                        <Image style={styles.icondelete}
+                                                            source={require('./Assets/images/link.png')} />
+                                                        <Text style={{ ...styles.regDarlText }}>{L('Open Link')}</Text>
                                                     </View>
                                                 </TouchableWithoutFeedback>
-                                            )
-                                        }
+                                                <TouchableWithoutFeedback onPress={() => this.removeSocail(key)}>
+                                                    <View style={{
+                                                        ...styles.rowAlignsentre, marginLeft: wp(6),
+                                                    }} >
+                                                        <Image style={styles.icondelete}
+                                                            source={require('./Assets/images/delete.png')} />
+                                                        <Text style={{ ...styles.regDarlText, color: '#e44040' }}>{L('Delete')}</Text>
+                                                    </View>
+                                                </TouchableWithoutFeedback>
+                                            </View>
+                                            : null}
+                                        <Button style={{ ...styles.mainDarkButton, marginTop: hp(15), marginBottom: hp(3) }} onPress={() => this.saveSocial2()}>
+                                            <Text style={styles.midWhiteTextForMainButton}>{L('Save Link')}</Text>
+                                        </Button>
 
-                                    })}
-                                </View>
 
-                                <View style={{ marginTop: hp(5) }}>
-                                    <Text style={styles.boldDarkText} >{L('Text me')}</Text>
-                                    <View style={styles.viewForSocialImage}>
-                                        {nockedSocail.map((item, index) => {
-                                            const social = this.filterObject(item.media_name, 'textme')
-                                            if (social) {
-                                                return (
-                                                    <TouchableWithoutFeedback key={index} onPress={() => this.handelOpenUrl(item.account, "textme")}>
-                                                        <View style={{ marginVertical: hp(2), marginHorizontal: wp(4) }}>
-                                                            <Image style={{ width: wp(15), height: hp(7), resizeMode: 'contain' }}
-                                                                source={social.image} />
-                                                        </View>
-                                                    </TouchableWithoutFeedback>
-                                                )
-                                            }
-
-                                        })}
                                     </View>
+                                    : this.state.modalPage == 1 ? <View>
+                                        <Text style={{
+                                            ...styles.boldDarkText, marginLeft: wp(5),
+                                            marginVertical: hp(2)
+                                        }}>{L('Choose a social link to add')}</Text>
 
-                                </View>
 
-                                <View style={{ marginTop: hp(5) }}>
-                                    <Text style={styles.boldDarkText} >{L('My Contacts')}</Text>
-                                    <View style={styles.viewForSocialImage}>
-                                        {nockedSocail.map((item, index) => {
-                                            const social = this.filterObject(item.media_name, 'contact')
-                                            if (social) {
-                                                return (
-                                                    <TouchableWithoutFeedback key={index} onPress={() => this.handelOpenUrl(item.account, 'contact')}>
-                                                        <View style={{ marginVertical: hp(2), marginHorizontal: wp(4) }}>
-                                                            <Image style={{ width: wp(15), height: hp(7), resizeMode: 'contain' }}
-                                                                source={social.image} />
-                                                        </View>
-                                                    </TouchableWithoutFeedback>
-                                                )
-                                            }
 
-                                        })}
-                                    </View>
-                                </View>
+
+                                        <FlatList
+                                            style={{ alignSelf: 'center' }}
+                                            data={linkData}
+                                            numColumns={4}
+                                            renderItem={this._renderSocialMedia}
+                                            keyExtractor={(item, index) => index.toString()}
+                                        />
+                                        <Button style={{ ...styles.mainDarkButton, marginTop: hp(15), marginBottom: hp(3) }} onPress={() => this.saveSocial()}>
+                                            <Text style={styles.midWhiteTextForMainButton}>{L('Save Link')}</Text>
+                                        </Button>
+                                    </View> : null}
 
 
                             </View>
-                        </View>
 
+
+
+
+                        </KeyboardAvoidingView>
                     </View>
                 </Modal>
+
                 {this._renderLoading()}
             </Container>
         );
