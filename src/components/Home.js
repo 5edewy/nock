@@ -99,7 +99,7 @@ class Home extends Component {
     async componentDidMount() {
 
 
-        NfcManager.start();
+        // NfcManager.start();
         try {
             const val = await AsyncStorage.getItem('user')
             const user = JSON.parse(val)
@@ -162,31 +162,77 @@ class Home extends Component {
 
     writeData = async () => {
         const { user } = this.props
-
+        console.clear();
         if (!user.username) {
             Alert.alert("Nothing to write");
             return;
         }
+        // NfcManager.start();
         try {
             let resp = await NfcManager.requestTechnology(NfcTech.Ndef, {
 
                 alertMessage: 'Ready to write some NFC tags!'
             });
 
-            // console.log(resp);
+            console.log(resp);
             let ndef = await NfcManager.getNdefMessage();
-            // console.log(ndef);
+            console.log(ndef);
             let bytes = buildUrlPayload("https://nockapp.net/ar/users/shipProfile/" + user.username);
-            await NfcManager.writeNdefMessage(bytes);
-            // console.log('successfully write ndef');
+            console.log(user);
+            const res = await NfcManager.writeNdefMessage(bytes);
+            // console.log(res);
             await NfcManager.setAlertMessageIOS('Your Ship Is Ready To Use');
-            Actions.pop()
+            // Actions.pop()
             this._cleanUp();
         } catch (ex) {
             await NfcManager.setAlertMessageIOS(ex.toString());
+            // console.log(ex);
             // console.log('ex', ex);
             this._cleanUp();
         }
+    }
+
+    _writeData = async () => {
+        const { user } = this.props
+        console.clear();
+        if (!user.username) {
+            Alert.alert("Nothing to write");
+            return;
+        }
+        NfcManager.start();
+        let tech = Platform.OS === 'ios' ? NfcTech.MifareIOS : NfcTech.NfcA;
+        let resp = await NfcManager.requestTechnology(tech, {
+            alertMessage: 'Ready to do some custom Mifare cmd!'
+        });
+
+        let text = "https://nockapp.net/ar/users/shipProfile/" + user.username;
+        let fullLength = text.length + 7;
+        let payloadLength = text.length + 3;
+
+        let cmd = Platform.OS === 'ios' ? NfcManager.sendMifareCommandIOS : NfcManager.transceive;
+
+        resp = await cmd([0xA2, 0x04, 0x03, fullLength, 0xD1, 0x01]); // 0x0C is the length of the entry with all the fluff (bytes + 7)
+        resp = await cmd([0xA2, 0x05, payloadLength, 0x54, 0x02, 0x65]); // 0x54 = T = Text block, 0x08 = length of string in bytes + 3
+
+        let currentPage = 6;
+        let currentPayload = [0xA2, currentPage, 0x6E];
+
+        for (let i = 0; i < text.length; i++) {
+            currentPayload.push(text.charCodeAt(i));
+            if (currentPayload.length == 6) {
+                resp = await cmd(currentPayload);
+                currentPage += 1;
+                currentPayload = [0xA2, currentPage];
+            }
+        }
+
+        // close the string and fill the current payload
+        currentPayload.push(254);
+        while (currentPayload.length < 6) {
+            currentPayload.push(0);
+        }
+
+        resp = await cmd(currentPayload);
     }
     componentWillUnmount() {
         this._cleanUp();
@@ -337,7 +383,7 @@ class Home extends Component {
                         </View>
                     </View>
                     {user ?
-                        <TouchableWithoutFeedback onPress={this.writeData/*Actions.push('Scan', { user })*/}>
+                        <TouchableWithoutFeedback onPress={this.writeData/*() => Actions.push('Scan', { user })*/}>
                             <View>
                                 <Image style={styles.SideMenuIcon}
                                     source={require('./Assets/images/scan.png')} />
