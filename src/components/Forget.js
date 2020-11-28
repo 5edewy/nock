@@ -37,7 +37,10 @@ class Forget extends Component {
 
     _renderLoading() {
         const { loading } = this.props
-        return <Spinner size='large' visible={loading} />;
+        if (loading) {
+            return <Spinner size='large' visible={loading} />;
+        }
+
     }
     render() {
         const { rememberMe, email, password } = this.state

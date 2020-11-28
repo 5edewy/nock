@@ -42,7 +42,10 @@ class AddAddress extends Component {
 
     _renderLoading() {
         const { loading, loadingOthers } = this.props
-        return <Spinner size='large' visible={loading || loadingOthers ? true : false} />;
+        if (loading || loadingOthers) {
+            return <Spinner size='large' />;
+        }
+
     }
     render() {
         const { district, street, name, phone, country, city } = this.state

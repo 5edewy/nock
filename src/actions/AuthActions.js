@@ -52,7 +52,8 @@ export const userApi = (method, api, data, sessiontoken, flag) => {
       data: method == "POST" ? data : '',
       params: method == "GET" ? data : ''
     }).then(function (res) {
-
+      // console.clear();
+      // console.log(res);
       if (api == "addEditAddress") {
         Actions.pop()
       }

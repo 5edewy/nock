@@ -39,6 +39,7 @@ export default (state = INITAL_STATE, action) => {
         case 'address':
           return { ...state, loading: false, address: data.address }
         case 'socail':
+          console.log(data);
           return { ...state, loading: false, minSocial: data.social, userSocial: data.user }
         case 'nockedSocail':
           Actions.pop()

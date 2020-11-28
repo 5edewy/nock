@@ -25,7 +25,10 @@ class ContactUS extends Component {
     }
     _renderLoading() {
         const { loading } = this.props
-        return <Spinner size='large' visible={loading} />;
+        if (loading) {
+            return <Spinner size='large' />;
+        }
+
     }
     submit() {
         const { name, email, phone, message } = this.state;

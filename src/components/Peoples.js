@@ -95,7 +95,8 @@ class Peoples extends Component {
                     </View>
 
                 </Content>
-                <Spinner size='large' visible={this.props.loading} />
+                {this.props.loading ?
+                    <Spinner size='large' /> : null}
             </Container>
         );
     }

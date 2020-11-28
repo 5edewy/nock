@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import {
-    View, Text, Image, TouchableWithoutFeedback, Animated, Alert, Easing, FlatList, Modal, KeyboardAvoidingView, Platform, Linking
+    View, Text, Image, TouchableWithoutFeedback, Animated, Alert, Easing, FlatList, Modal, KeyboardAvoidingView, Platform, Linking, NativeModules
 } from 'react-native'
 import { Button, Card, Container, Content, Icon, Input, Row, Thumbnail } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import styles from './Assets/style/styles';
 import { Actions } from 'react-native-router-flux';
 
-import { userApi, otherApi, changeValue, clearUser } from '../actions';
+import { userApi, changeValue, clearUser } from '../actions';
 import { Spinner } from './Assets/common';
 import { connect } from 'react-redux';
 import { L } from '../Config';
@@ -168,28 +168,30 @@ class Home extends Component {
             return;
         }
         // NfcManager.start();
-        try {
-            let resp = await NfcManager.requestTechnology(NfcTech.Ndef, {
+        const url = "https://nockapp.net/ar/users/shipProfile/" + user.username
+        NativeModules.Nock.Write(url, 100)
+        // try {
+        //     let resp = await NfcManager.requestTechnology(NfcTech.Ndef, {
 
-                alertMessage: 'Ready to write some NFC tags!'
-            });
+        //         alertMessage: 'Ready to write some NFC tags!'
+        //     });
 
-            console.log(resp);
-            let ndef = await NfcManager.getNdefMessage();
-            console.log(ndef);
-            let bytes = buildUrlPayload("https://nockapp.net/ar/users/shipProfile/" + user.username);
-            console.log(user);
-            const res = await NfcManager.writeNdefMessage(bytes);
-            // console.log(res);
-            await NfcManager.setAlertMessageIOS('Your Ship Is Ready To Use');
-            // Actions.pop()
-            this._cleanUp();
-        } catch (ex) {
-            await NfcManager.setAlertMessageIOS(ex.toString());
-            // console.log(ex);
-            // console.log('ex', ex);
-            this._cleanUp();
-        }
+        //     console.log(resp);
+        //     let ndef = await NfcManager.getNdefMessage();
+        //     console.log(ndef);
+        //     let bytes = buildUrlPayload("https://nockapp.net/ar/users/shipProfile/" + user.username);
+        //     console.log(user);
+        //     const res = await NfcManager.writeNdefMessage(bytes);
+        //     // console.log(res);
+        //     await NfcManager.setAlertMessageIOS('Your Ship Is Ready To Use');
+        //     // Actions.pop()
+        //     this._cleanUp();
+        // } catch (ex) {
+        //     await NfcManager.setAlertMessageIOS(ex.toString());
+        //     // console.log(ex);
+        //     // console.log('ex', ex);
+        //     this._cleanUp();
+        // }
     }
 
     _writeData = async () => {
@@ -242,15 +244,7 @@ class Home extends Component {
         NfcManager.cancelTechnologyRequest().catch(() => 0);
     }
 
-    // componentDidUpdate() {
-    //     const { nockedSocail, updateNocked, changeValue, nockedSocailUser } = this.props
-    //     if (nockedSocail && updateNocked) {
 
-    //         Actions.push('Myprofile', { profile: nockedSocail, userProfile: nockedSocailUser })
-    //         changeValue({ updateNocked: false, nockedSocail: null, userProfile: null })
-    //         // this.setState({ nockedTag: true })
-    //     }
-    // }
     _sidemenuOn() {
         Animated.timing(this.state.openSideMenu, {
             toValue: L("sidemenuTovalue"), duration: 500, useNativeDriver: true, easing: Easing.ease
@@ -331,9 +325,12 @@ class Home extends Component {
         return object
     }
     _renderLoading() {
-        const { loading, loadingOthers } = this.props
+        const { loading } = this.props
+        // console.log('loading', loading);
+        if (loading) {
+            return <Spinner size='large' />;
+        }
 
-        return <Spinner size='large' visible={loading || loadingOthers ? true : false} />;
 
     }
     saveSocial() {
@@ -718,5 +715,5 @@ const mapStateToProps = ({ auth }) => {
     return { user, loading, minSocial, updateNocked, nockedSocailUser, nockedSocail };
 };
 
-export default connect(mapStateToProps, { userApi, otherApi, changeValue, clearUser })(Home);
+export default connect(mapStateToProps, { userApi, changeValue, clearUser })(Home);
 

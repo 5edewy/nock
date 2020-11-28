@@ -13,6 +13,10 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		16B7BF1A71984581B55A8755 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9300EF6EEAC74949B33EC540 /* MaterialCommunityIcons.ttf */; };
+		212BD7E52572972800CB351F /* Nock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212BD7E42572972800CB351F /* Nock.swift */; };
+		212BD7E62572972800CB351F /* Nock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212BD7E42572972800CB351F /* Nock.swift */; };
+		212BD7EC2572975400CB351F /* Nock.m in Sources */ = {isa = PBXBuildFile; fileRef = 212BD7EB2572975400CB351F /* Nock.m */; };
+		212BD7ED2572975400CB351F /* Nock.m in Sources */ = {isa = PBXBuildFile; fileRef = 212BD7EB2572975400CB351F /* Nock.m */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -79,6 +83,10 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = nock/main.m; sourceTree = "<group>"; };
 		17F64B4BAB6125956134A289 /* Pods-nock-nockTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nock-nockTests.debug.xcconfig"; path = "Target Support Files/Pods-nock-nockTests/Pods-nock-nockTests.debug.xcconfig"; sourceTree = "<group>"; };
 		1862FC77041149D9B9C16497 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		212BD7CC2572962A00CB351F /* nock-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "nock-Bridging-Header.h"; sourceTree = "<group>"; };
+		212BD7CD2572962A00CB351F /* nock-tvOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "nock-tvOS-Bridging-Header.h"; sourceTree = "<group>"; };
+		212BD7E42572972800CB351F /* Nock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nock.swift; sourceTree = "<group>"; };
+		212BD7EB2572975400CB351F /* Nock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Nock.m; sourceTree = "<group>"; };
 		2B460F15BD314BEB82DA02E3 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../src/components/Assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* nock-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "nock-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* nock-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "nock-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -177,6 +185,10 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				D2D2DFA4253C425A001319C8 /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				212BD7CC2572962A00CB351F /* nock-Bridging-Header.h */,
+				212BD7E42572972800CB351F /* Nock.swift */,
+				212BD7EB2572975400CB351F /* Nock.m */,
+				212BD7CD2572962A00CB351F /* nock-tvOS-Bridging-Header.h */,
 			);
 			name = nock;
 			sourceTree = "<group>";
@@ -365,10 +377,11 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 6E4SEUDA7B;
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1220;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
+						LastSwiftMigration = 1220;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E48F1E0B4A5D006451C7 = {
@@ -622,6 +635,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				212BD7EC2572975400CB351F /* Nock.m in Sources */,
+				212BD7E52572972800CB351F /* Nock.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -631,6 +646,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				212BD7ED2572975400CB351F /* Nock.m in Sources */,
+				212BD7E62572972800CB351F /* Nock.swift in Sources */,
 				2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */,
 				2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */,
 			);
@@ -664,6 +681,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 17F64B4BAB6125956134A289 /* Pods-nock-nockTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -687,6 +705,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B844F3F70214192AECCDF77F /* Pods-nock-nockTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = nockTests/Info.plist;
@@ -714,6 +733,7 @@
 				DEVELOPMENT_TEAM = 6E4SEUDA7B;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = nock/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.3;
 				OTHER_LDFLAGS = (
@@ -723,6 +743,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.alyomhost.nock;
 				PRODUCT_NAME = nock;
+				SWIFT_OBJC_BRIDGING_HEADER = "nock-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -739,6 +760,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6E4SEUDA7B;
 				INFOPLIST_FILE = nock/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.3;
 				OTHER_LDFLAGS = (
@@ -748,6 +770,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.alyomhost.nock;
 				PRODUCT_NAME = nock;
+				SWIFT_OBJC_BRIDGING_HEADER = "nock-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -759,6 +782,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -775,6 +799,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.nock-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_OBJC_BRIDGING_HEADER = "nock-tvOS-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 10.0;
 			};
@@ -786,6 +813,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -802,6 +830,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.nock-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_OBJC_BRIDGING_HEADER = "nock-tvOS-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 10.0;
 			};
@@ -810,6 +840,7 @@
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -836,6 +867,7 @@
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
